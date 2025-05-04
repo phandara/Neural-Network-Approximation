@@ -1,28 +1,31 @@
 # Neural-Network-Approximation
 
 ## Structure
+```
 quantile_hedging_nn/
 ├── data/
-│   └── generator.py               # Market simulation (e.g. trinomial model)
+│   └── generator.py
 ├── models/
-│   └── hedging_model.py          # Neural network architectures
+│   └── hedging_model.py
 ├── training/
-│   ├── train.py                  # Training script
-│   └── callbacks.py              # TensorBoard, early stopping, model checkpointing
+│   ├── train.py
+│   └── callbacks.py
 ├── evaluation/
-│   ├── evaluate.py               # Backtest & performance metrics
-│   └── plot_utils.py             # Custom plotting functions
+│   ├── evaluate.py
+│   └── plot_utils.py
 ├── utils/
-│   └── losses.py                 # Custom loss (truncated sigmoid) and metrics
-│   └── config.py                 # Central config with hyperparameters
+│   └── losses.py
+│   └── config.py
 ├── notebooks/
-│   └── exploratory.ipynb         # For prototyping
-├── main.py                       # Entrypoint for full training/testing cycle
+│   └── exploratory.ipynb
+├── main.py
 └── README.md
+```
+
 
 | Component              | Done? | Notes                                               |
 | ---------------------- | ----- | --------------------------------------------------- |
-| Trinomial generator    | ⬜     | Re-implement from scratch or re-use cleaned version |
+| Model generator        | ⬜     | Re-implement from scratch or re-use cleaned version |
 | LSTM model             | ⬜     | Modular, test on synthetic data                     |
 | Truncated sigmoid loss | ⬜     | Careful TensorFlow implementation                   |
 | Training loop          | ⬜     | Save models for different λ                         |

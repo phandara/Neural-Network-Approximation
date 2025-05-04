@@ -10,7 +10,7 @@ from models.loss_function import augmented_quantile_loss
 
 # Parameters
 mu_values = [10, 50, 100, 500, 1000, 2000, 5000, 10000]
-q_target = 0.95
+q_target = 0.8
 epochs = 20
 batch_size = 512
 model_dir = "models_mu"

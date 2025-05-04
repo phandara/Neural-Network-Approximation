@@ -8,7 +8,7 @@ from models.loss_function import augmented_quantile_loss
 from models.architecture import create_lstm_model
 
 # Parameters
-num_samples = 1000
+num_samples = 50000
 time_steps = 30
 learning_rate = 1e-4
 mu = 1e4  # weight for loss

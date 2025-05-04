@@ -10,11 +10,11 @@ from models.loss_function import augmented_quantile_loss
 from models.architecture import create_lstm_model
 
 # Parameters
-num_samples = 50000
+num_samples = 25000
 time_steps = 30
 learning_rate = 1e-4
 q_target = 0.99  # target hedging probability
-epochs = 40
+epochs = 100
 batch_size = 128
 
 # List of mu values to train over

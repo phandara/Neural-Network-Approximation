@@ -1,44 +1,40 @@
 import os
 import tensorflow as tf
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from data.generator import DataGenerator
 from models.loss_function import augmented_quantile_loss
 from models.architecture import create_lstm_model
 
-# Set training parameters
-NUM_SAMPLES = 10000
-TIME_STEPS = 30
-Q_TARGET = 0.9  # Desired quantile level
-MU = 10.0        # Penalty weight
-BATCH_SIZE = 512
-EPOCHS = 40
-LEARNING_RATE = 1e-3
+# Parameters
+num_samples = 1000
+time_steps = 30
+learning_rate = 1e-4
+mu = 1e4  # weight for loss
+q_target = 0.99  # target success probability
+epochs = 40
+batch_size = 128
 
-# 1. Load data
-generator = DataGenerator(num_samples=NUM_SAMPLES, time_steps=TIME_STEPS)
+# Load Data
+generator = DataGenerator(num_samples=num_samples, time_steps=time_steps)
 x_train, x_test, y_train, y_test = generator.generate_data()
 
-# 2. Define model, loss, and optimizer
-loss_fn = augmented_quantile_loss(q_target=Q_TARGET, mu=MU)
-optimizer = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE)
+# Define input shape
+input_shape = (time_steps, 1)  # (timesteps, features)
 
-model = create_lstm_model(
-    input_shape=(TIME_STEPS, 1),
-    loss_fn=loss_fn,
-    optimizer=optimizer
-)
+# Build model
+model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
 
-# 3. Train the model
-history = model.fit(
-    x_train, y_train,
-    validation_data=(x_test, y_test),
-    batch_size=BATCH_SIZE,
-    epochs=EPOCHS,
-    verbose=1
-)
+# Compile with custom loss
+loss = augmented_quantile_loss(q_target=q_target, mu=mu)
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss)
 
-# 4. Save model weights
-weights_dir = os.path.abspath("weights")
-os.makedirs(weights_dir, exist_ok=True)
-model.save_weights(os.path.join(weights_dir, f"lstm_BS_q{int(Q_TARGET*100)}.h5"))
+# Train
+model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.2)
+
+# Save weights
+os.makedirs("models", exist_ok=True)
+model.save_weights("models/lstm_quantile_bs.weights.h5")
 
 print("Training completed and weights saved.")

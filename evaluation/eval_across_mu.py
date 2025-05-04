@@ -15,7 +15,7 @@ from models.loss_function import augmented_quantile_loss
 # Parameters
 mu_values = [10, 100, 1000, 5000, 10000, 20000]
 q_target = 0.8
-model_dir = "models_mu"
+model_dir = "models"
 plot_dir = "plots"
 os.makedirs(plot_dir, exist_ok=True)
 
@@ -37,7 +37,7 @@ for mu in mu_values:
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)
 
     # Load pre-trained weights
-    weight_path = os.path.join(model_dir, f"model_mu_{mu}.weights.h5")
+    weight_path = os.path.join(model_dir, f"lstm_quantile_mu_{mu}.weights.h5")
     if not os.path.exists(weight_path):
         print(f"❌ Weights for mu={mu} not found at {weight_path}, skipping...")
         continue

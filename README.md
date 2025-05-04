@@ -2,24 +2,39 @@
 
 ## Structure
 ```
-quantile_hedging_nn/
+quantile-hedging-nn/
+│
 ├── data/
-│   └── generator.py
+│   ├── generator.py            # Black-Scholes / Heston simulation
+│   └── utils.py                # Scaling, batching, train/test split helpers
+│
 ├── models/
-│   └── hedging_model.py
-├── training/
-│   ├── train.py
-│   └── callbacks.py
-├── evaluation/
-│   ├── evaluate.py
-│   └── plot_utils.py
-├── utils/
-│   └── losses.py
-│   └── config.py
+│   ├── architecture.py         # Model architecture definitions (LSTM, FFN, etc.)
+│   ├── loss_functions.py       # Truncated sigmoid-based losses
+│   ├── metrics.py              # Hedge probability, pricing metrics, etc.
+│   └── trainer.py              # Model compilation, training loop, callbacks
+│
+├── experiments/
+│   ├── train_bs.py             # Training script on BS data
+│   ├── train_heston.py         # Training on Heston (later)
+│   └── analyze_results.py      # Post-training metrics and visualizations
+│
+├── plots/
+│   └── ...                     # Saved plot outputs
+│
 ├── notebooks/
-│   └── exploratory.ipynb
-├── main.py
-└── README.md
+│   └── dev_tests.ipynb         # Prototyping notebook (for exploratory use)
+│
+├── saved_models/
+│   └── bs_lambda_1000.h5       # Trained model weights
+│
+├── config/
+│   └── config.yaml             # Config file for paths, training params, model hyperparams
+│
+├── README.md
+├── requirements.txt
+└── .gitignore
+
 ```
 
 ## Checklist

@@ -99,3 +99,9 @@ df = pd.DataFrame({
 df.to_csv(os.path.join(model_dir, "mu_results.csv"), index=False)
 
 print("\n✅ Evaluation complete. Results saved.")
+
+# Print helpful debug stats
+print(f"Mean Initial Capital (V0): {V0.mean():.4f}")
+print(f"Success Probability (portfolio ≥ H): {(portfolio >= H).mean():.4f}")
+print(f"Min/Max portfolio: {portfolio.min():.2f} / {portfolio.max():.2f}")
+print(f"Min/Max H: {H.min():.2f} / {H.max():.2f}")

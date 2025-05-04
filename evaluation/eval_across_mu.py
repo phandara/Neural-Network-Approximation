@@ -29,7 +29,7 @@ prob_success_list = []
 for mu in mu_values:
     print(f"Training model for mu = {mu}")
     model = create_lstm_model(input_shape=input_shape)
-    loss_fn = augmented_quantile_loss(q_target=q_target, mu=mu)
+    loss_fn = augmented_quantile_loss( mu=mu)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)
 
     model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=0)

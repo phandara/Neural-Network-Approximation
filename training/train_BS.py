@@ -27,7 +27,7 @@ input_shape = (time_steps, 1)  # (timesteps, features)
 model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
 
 # Compile with custom loss
-loss = augmented_quantile_loss(q_target=q_target, mu=mu)
+loss = augmented_quantile_loss(mu=mu)
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss)
 
 # Train

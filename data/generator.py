@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class DataGenerator:
     # BS model parameters
     def __init__(self, num_samples: int, time_steps: int, init_price: float = 100.0,
-                 mu: float = 0.0, sigma: float = 0.2, dt: float = 1.0 / 30):
+                 mu: float = 0.5, sigma: float = 0.4, dt: float = 1.0 / 30):
         self.num_samples = num_samples
         self.time_steps = time_steps
         self.init_price = init_price
@@ -28,7 +28,7 @@ class DataGenerator:
         y = self.simulate_bs_paths()
         x = np.zeros_like(y)
         x[:, 0] = y[:, 0]
-        x[:, 1] = y[:, 0]
+        x[:, 1:] = y[:, :-1]
         x[:, 2:] = y[:, :-2]
 
         x = x.reshape(self.num_samples, self.time_steps, 1)

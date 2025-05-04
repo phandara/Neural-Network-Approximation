@@ -3,93 +3,99 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import sys
+import pandas as pd
+
+# Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from data.generator import DataGenerator
 from models.architecture import create_lstm_model
 from models.loss_function import augmented_quantile_loss
 
 # Parameters
-mu_values = [10, 50, 100, 500, 1000, 2000, 5000, 10000]
+mu_values = [10, 100, 1000, 5000, 10000, 20000]
 q_target = 0.8
-epochs = 20
-batch_size = 512
 model_dir = "models_mu"
-os.makedirs(model_dir, exist_ok=True)
+plot_dir = "plots"
+os.makedirs(plot_dir, exist_ok=True)
 
-# Data generation
+# Load evaluation data
 generator = DataGenerator(num_samples=5000, time_steps=30)
 x_train, x_test, y_train, y_test = generator.generate_data()
-input_shape = x_train.shape[1:]
+input_shape = x_test.shape[1:]
 
-# Storage
+# Storage for results
 V0_list = []
 prob_success_list = []
 
-# Loop over mu
 for mu in mu_values:
-    print(f"Training model for mu = {mu}")
+    print(f"\nEvaluating for mu = {mu}...")
+    
+    # Build and compile model
     model = create_lstm_model(input_shape=input_shape)
-    loss_fn = augmented_quantile_loss( mu=mu)
+    loss_fn = augmented_quantile_loss(mu=mu, q_target=q_target)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)
 
-    model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=0)
-    
-    # Save weights
-    model_path = os.path.join(model_dir, f"model_mu_{mu}.weights.h5")
-    model.save_weights(model_path)
+    # Load pre-trained weights
+    weight_path = os.path.join(model_dir, f"model_mu_{mu}.weights.h5")
+    if not os.path.exists(weight_path):
+        print(f"❌ Weights for mu={mu} not found at {weight_path}, skipping...")
+        continue
+    model.load_weights(weight_path)
 
     # Predict
-    y_pred = model.predict(x_test)
+    y_pred = model.predict(x_test, verbose=0)
 
-    # Extract V0
+    # Extract initial capital
     V0 = y_pred[:, 0, 0]
     V0_mean = np.mean(V0)
     V0_list.append(V0_mean)
 
-    # Portfolio value
+    # Compute portfolio
     delta = y_pred[:, 1:, :]
     price_incr = y_test[:, 1:, :] - y_test[:, :-1, :]
     gains = np.sum(delta * price_incr, axis=(1, 2))
     portfolio = V0 + gains
 
-    # Payoff H
+    # Payoff
     K = 100.0
     H = np.maximum(y_test[:, -1, 0] - K, 0.0)
 
+    # Probability of successful hedge
     success_prob = np.mean(portfolio >= H)
     prob_success_list.append(success_prob)
 
-# Plotting
+# ---------- Plots ----------
 plt.figure(figsize=(8, 6))
-plt.plot(mu_values, V0_list, marker='o')
+plt.plot(mu_values[:len(V0_list)], V0_list, marker='o')
 plt.xlabel("Mu (penalty weight)")
 plt.ylabel("Initial Capital V0")
-plt.title("V0 vs Mu")
+plt.title("Initial Capital vs. Mu")
 plt.grid(True)
-plt.savefig("plots/v0_vs_mu.png")
+plt.savefig(os.path.join(plot_dir, "v0_vs_mu.png"))
 
 plt.figure(figsize=(8, 6))
-plt.plot(mu_values, prob_success_list, marker='o')
+plt.plot(mu_values[:len(prob_success_list)], prob_success_list, marker='o')
 plt.xlabel("Mu (penalty weight)")
 plt.ylabel("Success Probability")
-plt.title("Success Probability vs Mu")
+plt.title("Success Probability vs. Mu")
 plt.grid(True)
-plt.savefig("plots/prob_vs_mu.png")
+plt.savefig(os.path.join(plot_dir, "prob_vs_mu.png"))
 
 plt.figure(figsize=(8, 6))
 plt.plot(prob_success_list, V0_list, marker='o')
 plt.xlabel("Success Probability")
 plt.ylabel("Initial Capital V0")
-plt.title("Pareto Frontier: Capital vs Probability")
+plt.title("Pareto Frontier")
 plt.grid(True)
-plt.savefig("plots/pareto_frontier.png")
+plt.savefig(os.path.join(plot_dir, "pareto_frontier.png"))
 
-import pandas as pd
+# ---------- Save Results ----------
 df = pd.DataFrame({
-    "mu": mu_values,
+    "mu": mu_values[:len(V0_list)],
     "V0": V0_list,
     "prob_success": prob_success_list
 })
-df_path = os.path.join(model_dir, "mu_results.csv")
-df.to_csv(df_path, index=False)
+df.to_csv(os.path.join(model_dir, "mu_results.csv"), index=False)
 
+print("\n✅ Evaluation complete. Results saved.")

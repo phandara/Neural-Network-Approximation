@@ -5,12 +5,12 @@
 quantile-hedging-nn/
 │
 ├── data/
-│   ├── generator.py            # Black-Scholes / Heston simulation
-│   └── utils.py                # Scaling, batching, train/test split helpers
+│   └── generator.py            # Black-Scholes / Heston simulation
+│ 
 │
 ├── models/
 │   ├── architecture.py         # Model architecture definitions (LSTM, FFN, etc.)
-│   ├── loss_functions.py       # Truncated sigmoid-based losses
+│   ├── loss_function.py        # Truncated sigmoid-based losses
 │   ├── metrics.py              # Hedge probability, pricing metrics, etc.
 │   └── trainer.py              # Model compilation, training loop, callbacks
 │

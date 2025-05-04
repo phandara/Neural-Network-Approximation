@@ -2,20 +2,15 @@ import tensorflow as tf
 
 
 def augmented_quantile_loss(q_target: float, mu: float):
-    """
-    Custom loss function for quantile hedging using an augmented Lagrangian style penalty.
+    # L = |V_0|^2 + mu * max(0, q* - P(portfolio >= H))^2 
+    # Model wants to find small initial investment and and high hedging probability
 
-    L = |V_0|^2 + mu * max(0, q* - P(success))^2
-    
-    where success means: portfolio >= H
-    
-    Args:
-        q_target (float): Desired quantile hedging success probability (e.g. 0.95)
-        mu (float): Penalty weight for constraint violation
-    Returns:
-        A callable loss function
-    """
+    # sigmoid function for probability
+    def sigmoid_indicator(portfolio, H, beta=50.0):
+        return tf.square(tf.maximum(tf.sigmoid(beta * (portfolio - H)) - 0.5, 0.0))
 
+    # y_pred == NN output
+    # y_true == true theoretical price
     def loss(y_true, y_pred):
         # Extract initial capital prediction (V0)
         V0 = y_pred[:, 0, 0]  # shape (batch_size,)
@@ -34,8 +29,8 @@ def augmented_quantile_loss(q_target: float, mu: float):
         gains = tf.reduce_sum(tf.reduce_sum(delta * price_incr, axis=2), axis=1)  # shape: (batch,)
         portfolio = V0 + gains
 
-        # Success indicator: soft proxy using sigmoid approximation
-        success_prob = tf.reduce_mean(tf.cast(portfolio >= H, tf.float32))
+        # Success probability
+        success_prob = tf.reduce_mean(sigmoid_indicator(portfolio, H))
 
         # First term: squared initial capital
         L1 = tf.reduce_mean(tf.square(V0))

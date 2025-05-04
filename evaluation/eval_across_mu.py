@@ -93,4 +93,3 @@ df = pd.DataFrame({
 df_path = os.path.join(model_dir, "mu_results.csv")
 df.to_csv(df_path, index=False)
 
-import ace_tools as tools; tools.display_dataframe_to_user(name="Results Across Mu", dataframe=df)

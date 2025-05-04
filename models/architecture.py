@@ -3,7 +3,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Activation
 from tensorflow.keras.optimizers import Adam
 
-
+# For now "swish" activation, maybe GELU
 def create_lstm_model(input_shape, lstm_units=30, output_dim=1, learning_rate=1e-4):
     model = Sequential()
 

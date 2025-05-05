@@ -11,9 +11,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from data.generator import DataGenerator
 from models.architecture import create_lstm_model
 from models.loss_function import augmented_quantile_loss
+from models.log_loss_function import log_sigmoid_quantile_loss
 
 # Parameters
-mu_values = [10, 100, 1000, 5000, 7500, 10000]
+mu_values = [10, 100, 1000, 2500, 5000, 7500]
 model_dir = "models"
 plot_dir = "plots"
 q_target = 0.99
@@ -34,6 +35,7 @@ for mu in mu_values:
     # Build and compile model
     model = create_lstm_model(input_shape=input_shape)
     loss_fn = augmented_quantile_loss(mu=mu, q_target=q_target)
+    #loss_fn = log_sigmoid_quantile_loss(mu=mu)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)
 
     # Load pre-trained weights

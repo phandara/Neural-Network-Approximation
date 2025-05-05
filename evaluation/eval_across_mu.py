@@ -13,7 +13,7 @@ from models.architecture import create_lstm_model
 from models.loss_function import augmented_quantile_loss
 
 # Parameters
-mu_values = [10, 100, 1000, 5000, 10000, 20000]
+mu_values = [10, 100, 1000, 5000, 7500, 10000]
 q_target = 0.8
 model_dir = "models"
 plot_dir = "plots"

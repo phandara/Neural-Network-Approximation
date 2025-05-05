@@ -14,9 +14,9 @@ from models.loss_function import augmented_quantile_loss
 
 # Parameters
 mu_values = [10, 100, 1000, 5000, 7500, 10000]
-q_target = 0.8
 model_dir = "models"
 plot_dir = "plots"
+q_target = 0.99
 os.makedirs(plot_dir, exist_ok=True)
 
 # Load evaluation data

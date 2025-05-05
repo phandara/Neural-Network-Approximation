@@ -15,7 +15,7 @@ time_steps = 30
 learning_rate = 1e-4
 q_target = 0.99  # target hedging probability
 epochs = 100
-batch_size = 128
+batch_size = 512
 
 # List of mu values to train over
 mu_values = [10, 100, 1000, 5000, 10000, 20000]

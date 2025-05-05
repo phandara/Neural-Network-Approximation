@@ -3,7 +3,7 @@ from tensorflow.keras.models import Sequential # type: ignore
 from tensorflow.keras.layers import LSTM, Dense, Activation # type: ignore
 from tensorflow.keras.optimizers import Adam # type: ignore
 
-def create_lstm_model(input_shape, lstm_units=64, output_dim=1, learning_rate=1e-4):
+def create_lstm_model(input_shape, lstm_units=124, output_dim=1, learning_rate=1e-4):
     model = Sequential()
 
     # First LSTM Layer
@@ -23,3 +23,4 @@ def create_lstm_model(input_shape, lstm_units=64, output_dim=1, learning_rate=1e
     model.compile(optimizer=optimizer, loss=None)  # Loss set at training
 
     return model
+

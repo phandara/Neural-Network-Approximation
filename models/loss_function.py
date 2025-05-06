@@ -1,8 +1,8 @@
 import tensorflow as tf
 
-def augmented_quantile_loss(q_target: float = 1, mu: float = 100):
-    # L = |V_0|^2 + mu * max(0, q* - P(portfolio >= H))^2
-    def sigmoid_indicator(portfolio, H, beta=10.0):
+def augmented_quantile_loss(mu: float = 100):
+    
+    def sigmoid_indicator(portfolio, H, beta=50.0):
         return tf.square(tf.maximum(tf.sigmoid(beta * (portfolio - H)) - 0.5, 0.0))
 
     def loss(y_true, y_pred):

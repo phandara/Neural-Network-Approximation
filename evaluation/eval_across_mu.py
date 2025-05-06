@@ -14,7 +14,7 @@ from models.loss_function import augmented_quantile_loss
 from models.log_loss_function import log_sigmoid_quantile_loss
 
 # Parameters
-mu_values = [10, 100, 1000, 2500, 5000, 7500]
+mu_values = [10, 100, 1000, 3000, 5000, 7500]
 model_dir = "models"
 plot_dir = "plots"
 q_target = 0.99

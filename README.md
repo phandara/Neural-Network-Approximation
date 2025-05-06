@@ -11,6 +11,7 @@ quantile-hedging-nn/
 ├── models/
 │   ├── architecture.py         # Model architecture definitions (LSTM, FFN, etc.)
 │   ├── loss_function.py        # Truncated sigmoid-based losses
+│   ├── log_loss_function.py    # Log-Loss
 │   ├── metrics.py              # Hedge probability, pricing metrics, etc.
 │   └── trainer.py              # Model compilation, training loop, callbacks
 │

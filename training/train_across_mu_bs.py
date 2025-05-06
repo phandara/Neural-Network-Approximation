@@ -19,7 +19,7 @@ epochs = 100
 batch_size = 512
 
 # List of mu values to train over
-mu_values = [10, 100, 1000, 2500, 5000, 7500]
+mu_values = [10, 100, 1000, 3000, 5000, 7500]
 
 # Prepare data once
 print("Generating data...")

@@ -1,7 +1,7 @@
 import os
 import tensorflow as tf
 import sys
-
+import numpy as np
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -19,13 +19,17 @@ epochs = 100
 batch_size = 512
 
 # List of mu values to train over
-mu_values = [10, 100, 1000, 3000, 5000, 7500]
+mu_values = [10, 100, 1000, 3000, 5000, 6000, 7500]
 
 # Prepare data once
 print("Generating data...")
 generator = DataGenerator(num_samples=num_samples, time_steps=time_steps)
 x_train, x_test, y_train, y_test = generator.generate_data()
 input_shape = (time_steps, 1)
+# Save test set
+os.makedirs("data/generated", exist_ok=True)
+np.save("data/generated/x_test.npy", x_test)
+np.save("data/generated/y_test.npy", y_test)
 
 # Training loop
 for mu in mu_values:

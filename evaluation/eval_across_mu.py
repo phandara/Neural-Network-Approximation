@@ -17,7 +17,6 @@ from models.log_loss_function import log_sigmoid_quantile_loss
 mu_values = [10, 100, 1000, 3000, 5000, 6000, 7500]
 model_dir = "models"
 plot_dir = "plots"
-q_target = 0.99
 os.makedirs(plot_dir, exist_ok=True)
 
 # Load evaluation data
@@ -34,7 +33,7 @@ for mu in mu_values:
     
     # Build and compile model
     model = create_lstm_model(input_shape=input_shape)
-    loss_fn = augmented_quantile_loss(mu=mu, q_target=q_target)
+    loss_fn = augmented_quantile_loss(mu=mu)
     #loss_fn = log_sigmoid_quantile_loss(mu=mu)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)
 

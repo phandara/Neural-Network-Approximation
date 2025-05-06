@@ -14,7 +14,6 @@ from models.architecture import create_lstm_model
 num_samples = 50000
 time_steps = 30
 learning_rate = 1e-4
-q_target = 0.99  # target hedging probability
 epochs = 150
 batch_size = 512
 
@@ -37,7 +36,7 @@ for mu in mu_values:
 
     # Build and compile model
     model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
-    loss_fn = augmented_quantile_loss(mu=mu, q_target=q_target)
+    loss_fn = augmented_quantile_loss(mu=mu)
     #loss_fn = log_sigmoid_quantile_loss(mu=mu)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss_fn)
 

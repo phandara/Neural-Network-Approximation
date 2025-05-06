@@ -7,16 +7,23 @@ def create_lstm_model(input_shape, lstm_units=124, output_dim=1, learning_rate=1
     model = Sequential()
 
     # First LSTM Layer
-    model.add(LSTM(units=lstm_units, return_sequences=True, input_shape=input_shape))
+    model.add(LSTM(units=lstm_units,
+                   return_sequences=True,
+                   input_shape=input_shape,
+                   kernel_initializer='TruncatedNormal',
+                   bias_initializer='TruncatedNormal'))
     model.add(Activation('swish'))
 
     # Second LSTM Layer
-    model.add(LSTM(units=lstm_units, return_sequences=True))
+    model.add(LSTM(units=lstm_units,
+                   return_sequences=True,
+                   kernel_initializer='TruncatedNormal',
+                   bias_initializer='TruncatedNormal'))
     model.add(Activation('swish'))
 
     # Final Dense Layer + ReLU Activation to ensure V0 and deltas are non-negative
     model.add(Dense(output_dim))
-    model.add(Activation('relu'))  # Ensures positive outputs
+    model.add(Activation('swish'))
 
     # Compile
     optimizer = Adam(learning_rate=learning_rate)

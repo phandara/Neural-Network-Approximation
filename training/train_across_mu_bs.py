@@ -14,8 +14,8 @@ from models.architecture import create_lstm_model
 num_samples = 50000
 time_steps = 30
 learning_rate = 1e-4
-epochs = 150
-batch_size = 512
+epochs = 70
+batch_size = 1024
 
 # List of mu values to train over
 mu_values = [10, 100, 1000, 3000, 5000, 6000, 7500]

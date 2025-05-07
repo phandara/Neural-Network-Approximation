@@ -9,6 +9,7 @@ from data.generator import DataGenerator
 from models.loss_function import augmented_quantile_loss
 from models.log_loss_function import log_sigmoid_quantile_loss
 from models.architecture import create_lstm_model
+from models.metrics import prob_hedge, predicted_price
 
 # Parameters
 num_samples = 50000
@@ -35,10 +36,11 @@ for mu in mu_values:
     print(f"\n=== Training model with mu = {mu} ===")
 
     # Build and compile model
-    model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
     loss_fn = augmented_quantile_loss(mu=mu)
+    model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
+    metrics_fn = [prob_hedge, predicted_price]
     #loss_fn = log_sigmoid_quantile_loss(mu=mu)
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss_fn)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss_fn, metrics=metrics_fn)
 
     # Train model
     model.fit(x_train, y_train,

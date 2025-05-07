@@ -3,7 +3,7 @@ from tensorflow.keras.models import Sequential # type: ignore
 from tensorflow.keras.layers import LSTM, Dense, Activation # type: ignore
 from tensorflow.keras.optimizers import Adam # type: ignore
 
-def create_lstm_model(input_shape, lstm_units=124, output_dim=1, learning_rate=1e-4):
+def create_lstm_model(input_shape, lstm_units=30, output_dim=1, learning_rate=1e-4,):
     model = Sequential()
 
     # First LSTM Layer
@@ -16,12 +16,10 @@ def create_lstm_model(input_shape, lstm_units=124, output_dim=1, learning_rate=1
 
     # Second LSTM Layer
     model.add(LSTM(units=lstm_units,
-                   return_sequences=True,
-                   kernel_initializer='TruncatedNormal',
-                   bias_initializer='TruncatedNormal'))
+                   return_sequences=True))
     model.add(Activation('swish'))
 
-    # Final Dense Layer + ReLU Activation to ensure V0 and deltas are non-negative
+    # Final Dense Layer
     model.add(Dense(output_dim))
     model.add(Activation('swish'))
 

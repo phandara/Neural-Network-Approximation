@@ -12,6 +12,7 @@ from data.generator import DataGenerator
 from models.architecture import create_lstm_model
 from models.loss_function import augmented_quantile_loss
 from models.log_loss_function import log_sigmoid_quantile_loss
+from models.metrics import prob_hedge, predicted_price
 
 # Parameters
 mu_values = [10, 100, 1000, 3000, 5000, 6000, 7500]
@@ -32,10 +33,11 @@ for mu in mu_values:
     print(f"\nEvaluating for mu = {mu}...")
     
     # Build and compile model
-    model = create_lstm_model(input_shape=input_shape)
     loss_fn = augmented_quantile_loss(mu=mu)
+    model = create_lstm_model(input_shape=input_shape)
+    metrics_fn = [prob_hedge, predicted_price]
     #loss_fn = log_sigmoid_quantile_loss(mu=mu)
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn, metrics=metrics_fn)
 
     # Load pre-trained weights
     weight_path = os.path.join(model_dir, f"lstm_quantile_mu_{mu}.weights.h5")

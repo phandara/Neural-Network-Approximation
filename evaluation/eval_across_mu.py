@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import sys
 import pandas as pd
-
+from scipy.stats import norm
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -119,3 +119,17 @@ print(f"Mean Initial Capital (V0): {V0.mean():.4f}")
 print(f"Success Probability (portfolio ≥ H): {(portfolio >= H).mean():.4f}")
 print(f"Min/Max portfolio: {portfolio.min():.2f} / {portfolio.max():.2f}")
 print(f"Min/Max H: {H.min():.2f} / {H.max():.2f}")
+
+# Black-Scholes reference price for a European call option
+def bs_call_price(S, K, T, sigma, r=0):
+    d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+    return S * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
+
+# Add once
+S0 = 100
+K = 100
+sigma = 0.1
+T = 30 / 250
+bs_price = bs_call_price(S0, K, T, sigma)
+print(f"📌 Black-Scholes price for the call: {bs_price:.4f}")

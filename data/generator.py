@@ -10,14 +10,14 @@ class DataGenerator:
         self.num_samples = num_samples
         self.time_steps = time_steps
         self.init_price = init_price
-        self.mu = drift
+        self.drift = drift
         self.sigma = sigma
         self.dt = dt
 
     # Simulate paths using the BS model
     def simulate_bs_paths(self) -> np.ndarray:
         Z = np.random.normal(0, 1, size=(self.num_samples, self.time_steps - 1))
-        increments = (self.mu - 0.5 * self.sigma ** 2) * self.dt + self.sigma * np.sqrt(self.dt) * Z
+        increments = (self.drift - 0.5 * self.sigma ** 2) * self.dt + self.sigma * np.sqrt(self.dt) * Z
         increments = np.concatenate([np.zeros((self.num_samples, 1)), increments], axis=1)
         log_paths = np.cumsum(increments, axis=1)
         paths = self.init_price * np.exp(log_paths)

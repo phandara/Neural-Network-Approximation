@@ -27,9 +27,9 @@ class DataGenerator:
     def generate_data(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         y = self.simulate_bs_paths()
         x = np.zeros_like(y)
-        x[:, 0] = y[:, 0]
-        x[:, 1:] = y[:, :-1]
-        x[:, 2:] = y[:, :-2]
+        x[ : , 0] = y[ :, 0]
+        x[ : , 1] = y[ :, 0]
+        x[: ,2: ] = y[ : ,1:-1]
 
         x = x.reshape(self.num_samples, self.time_steps, 1)
         y = y.reshape(self.num_samples, self.time_steps, 1)

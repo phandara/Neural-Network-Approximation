@@ -10,5 +10,7 @@ def prob_hedge(y_true, y_pred):
     return tf.reduce_mean(tf.cast(portfolio >= H, tf.float32))
 
 def predicted_price(y_true, y_pred):
-    return y_pred[0,0,0]
+    V0 = y_pred[:, 0, 0]
+    return tf.reduce_mean(V0)
+
     

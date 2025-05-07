@@ -23,9 +23,7 @@ def create_lstm_model(input_shape, lstm_units=30, output_dim=1, learning_rate=1e
     model.add(Dense(output_dim))
     model.add(Activation('swish'))
 
-    # Compile
-    optimizer = Adam(learning_rate=learning_rate)
-    model.compile(optimizer=optimizer, loss=None)  # Loss set at training
+    # Compiling in training
 
     return model
 

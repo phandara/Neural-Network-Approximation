@@ -56,14 +56,16 @@ for mu in mu_values:
 
     # Compute portfolio
     delta = y_pred[:, 1:, :]
+    print("Δ min:", delta.min(), "max:", delta.max(), "mean:", delta.mean())
     price_incr = y_test[:, 1:, :] - y_test[:, :-1, :]
     gains = np.sum(delta * price_incr, axis=(1, 2))
     portfolio = V0 + gains
+    
 
     # Payoff
     K = 100.0
     H = np.maximum(y_test[:, -1, 0] - K, 0.0)
-
+    plt.hist(portfolio - H, bins=50)
     # Probability of successful hedge
     success_prob = np.mean(portfolio >= H)
     prob_success_list.append(success_prob)

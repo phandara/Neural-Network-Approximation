@@ -16,13 +16,14 @@ num_samples = 50000
 time_steps = 30
 learning_rate = 1e-4
 epochs = 70
-batch_size = 1024
+batch_size = 256
 
 # List of mu values to train over
 mu_values = [10, 100, 1000, 3000, 5000, 6000, 7500]
 
 # Prepare data once
 print("Generating data...")
+np.random.seed(42)
 generator = DataGenerator(num_samples=num_samples, time_steps=time_steps)
 x_train, x_test, y_train, y_test = generator.generate_data()
 input_shape = (time_steps, 1)

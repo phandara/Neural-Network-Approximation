@@ -3,7 +3,7 @@ import tensorflow as tf
 def augmented_quantile_loss(mu: float = 100):
     
     def sigmoid_indicator(portfolio, H, beta=10.0):
-        return tf.square(tf.maximum(tf.sigmoid(beta * (portfolio - H)) - 0.5, 0.0))
+        return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))
 
     def loss(y_true, y_pred):
         V0 = y_pred[:, 0, 0]

@@ -12,11 +12,11 @@ from models.architecture import create_lstm_model
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
-num_samples = 50000
+num_samples = 100000
 time_steps = 30
 learning_rate = 1e-4
 epochs = 70
-batch_size = 256
+batch_size = 256*2
 
 # List of mu values to train over
 mu_values = [10, 100, 1000, 3000, 5000, 6000, 7500]

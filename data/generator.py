@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 class DataGenerator:
     # BS model parameters
     def __init__(self, num_samples: int, time_steps: int, init_price: float = 100.0,
-                 mu: float = 0, sigma: float = 0.1, dt: float = 1.0 / 250):
+                 drift: float = 0, sigma: float = 0.1, dt: float = 1.0 / 250):
         self.num_samples = num_samples
         self.time_steps = time_steps
         self.init_price = init_price
-        self.mu = mu
+        self.mu = drift
         self.sigma = sigma
         self.dt = dt
 

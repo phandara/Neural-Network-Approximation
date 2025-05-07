@@ -15,7 +15,7 @@ from models.log_loss_function import log_sigmoid_quantile_loss
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
-mu_values = [10, 100, 1000, 3000, 5000, 6000, 7500]
+mu_values = [1, 10, 100, 1000, 3000, 5000, 6000, 7500]
 model_dir = "models"
 plot_dir = "plots"
 os.makedirs(plot_dir, exist_ok=True)

@@ -69,6 +69,15 @@ for mu in mu_values:
     # Probability of successful hedge
     success_prob = np.mean(portfolio >= H)
     prob_success_list.append(success_prob)
+    plt.figure(figsize=(6, 4))
+    plt.hist(portfolio - H, bins=50)
+    plt.title(f'Portfolio - Payoff, μ = {mu}')
+    plt.xlabel("Portfolio - H")
+    plt.ylabel("Count")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(os.path.join(plot_dir, f"hist_portfolio_minus_H_mu_{mu}.png"))
+    plt.close()
 
 # ---------- Plots ----------
 plt.figure(figsize=(8, 6))

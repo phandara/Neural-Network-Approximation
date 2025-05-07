@@ -2,7 +2,7 @@ import tensorflow as tf
 
 def augmented_quantile_loss(mu: float = 100):
     
-    def sigmoid_indicator(portfolio, H, beta=10.0):
+    def sigmoid_indicator(portfolio, H, beta=1.0):
         return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))
 
     def loss(y_true, y_pred):
@@ -10,10 +10,10 @@ def augmented_quantile_loss(mu: float = 100):
         delta = y_pred[:, 1:, :]
         price_incr = y_true[:, 1:, :] - y_true[:, :-1, :]
         # Payoff
-        K = tf.constant(100.0, dtype=tf.float32)
+        K = 100
         H = tf.maximum(y_true[:, -1, 0] - K, 0.0)
 
-        gains = tf.reduce_sum(tf.reduce_sum(delta * price_incr, axis=2), axis=1)
+        gains = tf.reduce_sum(delta * price_incr, axis=[1,2])
         portfolio = V0 + gains
 
         

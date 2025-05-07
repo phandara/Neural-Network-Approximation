@@ -21,7 +21,7 @@ def create_lstm_model(input_shape, lstm_units=30, output_dim=1, learning_rate=1e
 
     # Final Dense Layer
     model.add(Dense(output_dim))
-    model.add(Activation('relu'))
+    model.add(Activation('swish'))
 
     # Compiling in training
 

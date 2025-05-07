@@ -12,7 +12,7 @@ from models.architecture import create_lstm_model
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
-num_samples = (512 * 700 + 512 * 300 ) * 2
+num_samples = 50000
 time_steps = 30
 learning_rate = 1e-4
 epochs = 70

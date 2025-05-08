@@ -46,9 +46,7 @@ for mu in mu_values:
     # Train model
     model.fit(x_train, y_train,
               epochs=epochs,
-              batch_size=batch_size,
-              validation_split=0.2,
-              verbose=2)
+              batch_size=batch_size)
 
     # Save weights
     os.makedirs("models", exist_ok=True)

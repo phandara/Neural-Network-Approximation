@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 class TrinomialDataGenerator:
     def __init__(self, num_samples: int, time_steps: int, init_price: float = 100.0,
-                 u: float = 0.05, d: float = -0.05, m: float = 0):
+                 u: float = 0.01, d: float = -0.01, m: float = 0):
         self.num_samples = num_samples
         self.time_steps = time_steps
         self.init_price = init_price

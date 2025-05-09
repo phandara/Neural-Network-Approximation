@@ -6,7 +6,7 @@ import tensorflow as tf
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data.generator_trinomial import TrinomialDataGenerator
+from data.generator_trimonial import TrinomialDataGenerator
 from models.loss_function import augmented_quantile_loss
 from models.architecture import create_lstm_model
 from models.metrics import prob_hedge, predicted_price
@@ -52,7 +52,7 @@ for mu in mu_values:
 
     # Save weights
     os.makedirs("models", exist_ok=True)
-    weight_path = f"models/lstm_trinomial_mu_{mu}.weights.h5"
+    weight_path = f"models/Trimonial/lstm_trinomial_mu_{mu}.weights.h5"
     model.save_weights(weight_path)
     print(f"Saved weights to: {weight_path}")
 

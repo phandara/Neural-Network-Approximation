@@ -8,7 +8,7 @@ from scipy.stats import norm
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data.generator import DataGenerator
+from data.generator_bs import DataGenerator
 from models.architecture import create_lstm_model
 from models.loss_function import augmented_quantile_loss
 from models.log_loss_function import log_sigmoid_quantile_loss
@@ -16,13 +16,13 @@ from models.metrics import prob_hedge, predicted_price
 
 # Parameters
 mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500]
-model_dir = "models"
-plot_dir = "plots"
+model_dir = "models/BS"
+plot_dir = "plots/BS"
 os.makedirs(plot_dir, exist_ok=True)
 
 # Load evaluation data
-x_test = np.load("data/generated/x_test.npy")
-y_test = np.load("data/generated/y_test.npy")
+x_test = np.load("data/generated/BS/x_test.npy")
+y_test = np.load("data/generated/BS/y_test.npy")
 input_shape = x_test.shape[1:]
 
 # Storage for results

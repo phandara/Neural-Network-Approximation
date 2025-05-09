@@ -5,7 +5,7 @@ import numpy as np
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data.generator import DataGenerator
+from data.generator_bs import DataGenerator
 from models.loss_function import augmented_quantile_loss
 from models.log_loss_function import log_sigmoid_quantile_loss
 from models.architecture import create_lstm_model
@@ -29,8 +29,8 @@ x_train, x_test, y_train, y_test = generator.generate_data()
 input_shape = (time_steps, 1)
 # Save test set
 os.makedirs("data/generated", exist_ok=True)
-np.save("data/generated/x_test.npy", x_test)
-np.save("data/generated/y_test.npy", y_test)
+np.save("data/generated/BS/x_test.npy", x_test)
+np.save("data/generated/BS/y_test.npy", y_test)
 
 # Training loop
 for mu in mu_values:
@@ -50,7 +50,7 @@ for mu in mu_values:
 
     # Save weights
     os.makedirs("models", exist_ok=True)
-    weight_path = f"models/lstm_quantile_mu_{mu}.weights.h5"
+    weight_path = f"models/BS/lstm_quantile_mu_{mu}.weights.h5"
     model.save_weights(weight_path)
     print(f"Saved weights to: {weight_path}")
 

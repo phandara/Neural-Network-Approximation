@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 class HestonDataGenerator:
     def __init__(self, num_samples: int, time_steps: int, init_price: float = 100.0,
-                 v0: float = 0.01, kappa: float = 2.0, theta: float = 0.01, # kappa == mean reversion speed, thetha == Long-term average vol
-                 xi: float = 0.3, rho: float = -0.8, dt: float = 1.0 / 250): # xi == vol of vol, rho == correlation price vs vol
+                 v0: float = 0.04, kappa: float = 2.0, theta: float = 0.05, # kappa == mean reversion speed, thetha == Long-term average vol
+                 xi: float = 0.4, rho: float = -0.8, dt: float = 1.0 / 250): # xi == vol of vol, rho == correlation price vs vol
         self.num_samples = num_samples
         self.time_steps = time_steps
         self.init_price = init_price

@@ -56,7 +56,7 @@ for mu in mu_values:
     portfolio = V0 + gains
 
     K = 100.0
-    B = 90.0
+    B = 95.0
     S_min = np.min(y_test[:, :, 0], axis=1)
     barrier_hit = (S_min <= B).astype(np.float32)
     call_payoff = np.maximum(y_test[:, -1, 0] - K, 0.0)

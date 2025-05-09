@@ -5,21 +5,19 @@ import matplotlib.pyplot as plt
 
 class TrinomialDataGenerator:
     def __init__(self, num_samples: int, time_steps: int, init_price: float = 100.0,
-                 mu: float = 0.0, sigma: float = 0.1, dt: float = 1.0 / 250):
+                 u: float = 0.05, d: float = -0.05, m: float = 0):
         self.num_samples = num_samples
         self.time_steps = time_steps
         self.init_price = init_price
-        self.mu = mu
-        self.sigma = sigma
-        self.dt = dt
+        self.u = 1+u
+        self.d = 1+d
+        self.m = 1+m
 
     def simulate_trinomial_paths(self) -> np.ndarray:
-        u = np.exp(self.sigma * np.sqrt(2 * self.dt))  # up factor
-        d = 1 / u                                      # down factor
-        m = 1                                          # middle (no move)
-        p_u = ((np.sqrt(self.dt) - 0.5 * np.sqrt(2 * self.dt)) / (2 * np.sqrt(2 * self.dt)))
+        # Equal probabilities
+        p_u = 1/3
         p_d = p_u
-        p_m = 1 - p_u - p_d
+        p_m = p_d
 
         prices = np.zeros((self.num_samples, self.time_steps))
         prices[:, 0] = self.init_price
@@ -30,9 +28,9 @@ class TrinomialDataGenerator:
             down_mask = rnd >= (1 - p_d)
             mid_mask = ~(up_mask | down_mask)
 
-            prices[up_mask, t] = prices[up_mask, t-1] * u
-            prices[mid_mask, t] = prices[mid_mask, t-1] * m
-            prices[down_mask, t] = prices[down_mask, t-1] * d
+            prices[up_mask, t] = prices[up_mask, t-1] * self.u
+            prices[mid_mask, t] = prices[mid_mask, t-1] * self.m
+            prices[down_mask, t] = prices[down_mask, t-1] * self.d
 
         return prices
 

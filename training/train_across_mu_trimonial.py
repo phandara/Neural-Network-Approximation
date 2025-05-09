@@ -1,13 +1,13 @@
 import os
-import tensorflow as tf
 import sys
 import numpy as np
+import tensorflow as tf
+
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data.generator_bs import DataGenerator
+from data.generator_trinomial import TrinomialDataGenerator
 from models.loss_function import augmented_quantile_loss
-from models.log_loss_function import log_sigmoid_quantile_loss
 from models.architecture import create_lstm_model
 from models.metrics import prob_hedge, predicted_price
 
@@ -16,42 +16,44 @@ num_samples = 100000
 time_steps = 30
 learning_rate = 1e-4
 epochs = 70
-batch_size = 256*2
+batch_size = 512
 
 # List of mu values to train over
 mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500]
 
 # Prepare data
-print("Generating data...")
-np.random.seed(1)
-generator = DataGenerator(num_samples=num_samples, time_steps=time_steps)
+print("Generating trinomial data...")
+np.random.seed(42)
+generator = TrinomialDataGenerator(num_samples=num_samples, time_steps=time_steps)
 x_train, x_test, y_train, y_test = generator.generate_data()
 input_shape = (time_steps, 1)
+
 # Save test set
-os.makedirs("data/generated", exist_ok=True)
-np.save("data/generated/BS/x_test.npy", x_test)
-np.save("data/generated/BS/y_test.npy", y_test)
+os.makedirs("data/generated/Trimonial", exist_ok=True)
+np.save("data/generated/Trimonial/x_test_trinomial.npy", x_test)
+np.save("data/generated/Trimonial/y_test_trinomial.npy", y_test)
 
 # Training loop
 for mu in mu_values:
-    print(f"\n=== Training model with mu = {mu} ===")
+    print(f"\n=== Training model on trinomial data with mu = {mu} ===")
 
     # Build and compile model
     loss_fn = augmented_quantile_loss(mu=mu)
     model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
     metrics_fn = [prob_hedge, predicted_price]
-    #loss_fn = log_sigmoid_quantile_loss(mu=mu)
+
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss_fn, metrics=metrics_fn)
 
     # Train model
     model.fit(x_train, y_train,
               epochs=epochs,
-              batch_size=batch_size)
+              batch_size=batch_size,
+              verbose=2)
 
     # Save weights
     os.makedirs("models", exist_ok=True)
-    weight_path = f"models/BS/lstm_quantile_mu_{mu}.weights.h5"
+    weight_path = f"models/lstm_trinomial_mu_{mu}.weights.h5"
     model.save_weights(weight_path)
     print(f"Saved weights to: {weight_path}")
 
-print("\n✅ All trainings complete.")
+print("\n✅ All trinomial trainings complete.")

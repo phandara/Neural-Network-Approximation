@@ -1,5 +1,5 @@
 import tensorflow as tf
-
+# more sensitive to small success probabilities
 def log_sigmoid_quantile_loss(mu: float = 1000.0, beta: float = 10.0):
     
     # L = |V_0|^2 - mu * log(P(portfolio >= H))
@@ -15,7 +15,15 @@ def log_sigmoid_quantile_loss(mu: float = 1000.0, beta: float = 10.0):
 
         # Payoff: H = max(S_T - K, 0)
         K = tf.constant(100.0, dtype=tf.float32)
-        H = tf.maximum(y_true[:, -1, 0] - K, 0.0)
+        B = tf.constant(90.0, dtype=tf.float32)
+        # Compute minimum path value
+        S_min = tf.reduce_min(y_true[:, :, 0], axis=1)
+        # Compute indicator for barrier breach
+        barrier_hit = tf.cast(S_min <= B, tf.float32)
+        # Standard call payoff
+        call_payoff = tf.maximum(y_true[:, -1, 0] - K, 0.0)
+        # Barrier payoff
+        H = barrier_hit * call_payoff
 
         # Portfolio value
         gains = tf.reduce_sum(delta * price_incr, axis=[1, 2])

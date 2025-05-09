@@ -15,7 +15,6 @@ def augmented_quantile_loss(mu: float = 100):
 
         gains = tf.reduce_sum(delta * price_incr, axis=[1,2])
         portfolio = V0 + gains
-
         
         L1 = tf.reduce_mean(tf.square(V0))
         L2 = mu * tf.reduce_mean(sigmoid_indicator(portfolio, H))

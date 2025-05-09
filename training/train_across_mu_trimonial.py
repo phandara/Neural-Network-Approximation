@@ -15,15 +15,15 @@ from models.metrics import prob_hedge, predicted_price
 num_samples = 100000
 time_steps = 30
 learning_rate = 1e-4
-epochs = 70
+epochs = 40
 batch_size = 512
 
 # List of mu values to train over
-mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500]
+mu_values = [10, 100, 500, 1000, 3000, 5000, 10000]
 
 # Prepare data
 print("Generating trinomial data...")
-np.random.seed(42)
+np.random.seed(1)
 generator = TrinomialDataGenerator(num_samples=num_samples, time_steps=time_steps)
 x_train, x_test, y_train, y_test = generator.generate_data()
 input_shape = (time_steps, 1)

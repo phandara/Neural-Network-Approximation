@@ -14,25 +14,20 @@ class TrinomialDataGenerator:
         self.m = 1+m
 
     def simulate_trinomial_paths(self) -> np.ndarray:
-        # Equal probabilities
-        p_u = 1/3
-        p_d = p_u
-        p_m = p_d
+        NumOfSamples = self.num_samples
+        TimeSteps = self.time_steps
+        InitPrice = self.init_price
 
-        prices = np.zeros((self.num_samples, self.time_steps))
-        prices[:, 0] = self.init_price
+        u = self.u
+        d = self.d
+        m = self.m
 
-        for t in range(1, self.time_steps):
-            rnd = np.random.rand(self.num_samples)
-            up_mask = rnd < p_u
-            down_mask = rnd >= (1 - p_d)
-            mid_mask = ~(up_mask | down_mask)
-
-            prices[up_mask, t] = prices[up_mask, t-1] * self.u
-            prices[mid_mask, t] = prices[mid_mask, t-1] * self.m
-            prices[down_mask, t] = prices[down_mask, t-1] * self.d
-
-        return prices
+        Z = np.random.choice([d, m, u], size=(NumOfSamples, TimeSteps))
+        S = np.zeros([NumOfSamples, TimeSteps])
+        S[:, 0] = InitPrice
+        for t in range(1, TimeSteps):
+            S[:, t] = S[:, t - 1] * Z[:, t]
+        return S
 
     def generate_data(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         y = self.simulate_trinomial_paths()
@@ -44,7 +39,7 @@ class TrinomialDataGenerator:
         x = x.reshape(self.num_samples, self.time_steps, 1)
         y = y.reshape(self.num_samples, self.time_steps, 1)
 
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
         return x_train.astype(np.float32), x_test.astype(np.float32), \
                y_train.astype(np.float32), y_test.astype(np.float32)
 

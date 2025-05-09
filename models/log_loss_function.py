@@ -1,6 +1,6 @@
 import tensorflow as tf
 # more sensitive to small success probabilities
-def log_sigmoid_quantile_loss(mu: float = 1000.0, beta: float = 10.0):
+def log_sigmoid_quantile_loss(mu: float = 1000.0, beta: float = 1.0):
     
     # L = |V_0|^2 - mu * log(P(portfolio >= H))
     # with sigmoid used to approximate indicator function for success probability

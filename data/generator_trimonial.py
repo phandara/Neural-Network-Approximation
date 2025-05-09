@@ -22,7 +22,7 @@ class TrinomialDataGenerator:
         d = self.d
         m = self.m
 
-        Z = np.random.choice([d, m, u], size=(NumOfSamples, TimeSteps))
+        Z = np.random.choice([d, m, u], size=(NumOfSamples, TimeSteps), p = [1/3, 1/3, 1/3])
         S = np.zeros([NumOfSamples, TimeSteps])
         S[:, 0] = InitPrice
         for t in range(1, TimeSteps):

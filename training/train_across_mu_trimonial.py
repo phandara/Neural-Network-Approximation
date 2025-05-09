@@ -12,14 +12,14 @@ from models.architecture import create_lstm_model
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
-num_samples = 100000
+num_samples = 500000    
 time_steps = 30
 learning_rate = 1e-4
 epochs = 40
-batch_size = 512
+batch_size = 512*2
 
 # List of mu values to train over
-mu_values = [10, 100, 500, 1000, 3000, 5000, 10000]
+mu_values = [100, 500, 1000, 3000, 5000, 10000, 20000]
 
 # Prepare data
 print("Generating trinomial data...")
@@ -41,7 +41,7 @@ for mu in mu_values:
     loss_fn = augmented_quantile_loss(mu=mu)
     model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
     metrics_fn = [prob_hedge, predicted_price]
-
+    
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss_fn, metrics=metrics_fn)
 
     # Train model

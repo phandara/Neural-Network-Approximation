@@ -12,14 +12,14 @@ from models.architecture import create_lstm_model
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
-num_samples = 500000    
+num_samples = 500000*2   
 time_steps = 30
 learning_rate = 1e-4
 epochs = 40
 batch_size = 512*2
 
 # List of mu values to train over
-mu_values = [100, 500, 1000, 3000, 5000, 10000, 20000]
+mu_values = [100, 500, 1000, 3000, 5000, 10000, 20000, 50000]
 
 # Prepare data
 print("Generating trinomial data...")

@@ -15,7 +15,7 @@ from models.loss_function import augmented_quantile_loss
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
-mu_values = [100, 500, 1000, 3000, 5000, 10000, 20000]
+mu_values = [100, 500, 1000, 3000, 5000, 10000, 20000, 22500, 25000, 27500, 30000]
 model_dir = "models/Trimonial"
 plot_dir = "plots/Trimonial"
 os.makedirs(plot_dir, exist_ok=True)

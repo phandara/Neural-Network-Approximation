@@ -1,10 +1,9 @@
 # Neural-Network-Approximation
 
 This repository contains a numerical framework to approximate superhedging prices of financial derivatives using LSTM-based neural networks under different market models. The framework supports:
-
-Black–Scholes (BS) Model
-Trinomial Tree Model
-Heston Stochastic Volatility Model
+- Black–Scholes (BS) Model
+- Trinomial Tree Model
+- Heston Stochastic Volatility Model
 It evaluates the initial capital vs. success probability tradeoff for superhedging via customized loss functions and metrics.
 
 ## Structure

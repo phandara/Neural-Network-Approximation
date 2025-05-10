@@ -7,7 +7,7 @@ import tensorflow as tf
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.architecture import create_lstm_model
-from models.log_loss_function import augmented_quantile_loss_heston
+from models.heston_loss_function import augmented_quantile_loss_heston
 from models.metrics import prob_hedge, predicted_price
 from data.generator_heston import HestonDataGenerator
 
@@ -19,7 +19,7 @@ epochs = 70
 batch_size = 512
 
 # List of mu values to train over
-mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500, 10000, 12000, 15000, 17500, 20000]
+mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500, 10000, 15000, 20000]
 # Data generation
 print("Generating Heston data...")
 np.random.seed(1)
@@ -29,7 +29,7 @@ input_shape = (time_steps, 1)
 
 # Save test data for evaluation
 os.makedirs("data/Heston/generated", exist_ok=True)
-np.save("data/generated/Heston/gx_test_heston.npy", x_test)
+np.save("data/generated/Heston/x_test_heston.npy", x_test)
 np.save("data/generated/Heston/y_test_heston.npy", y_test)
 
 # Training loop

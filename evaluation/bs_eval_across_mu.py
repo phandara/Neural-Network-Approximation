@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from data.generator_bs import DataGenerator
 from models.architecture import create_lstm_model
 from models.loss_function import augmented_quantile_loss
-from models.log_loss_function import log_sigmoid_quantile_loss
+from models.heston_loss_function import log_sigmoid_quantile_loss
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters

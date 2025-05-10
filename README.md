@@ -4,6 +4,7 @@ This repository contains a numerical framework to approximate superhedging price
 - Black–Scholes (BS) Model
 - Trinomial Tree Model
 - Heston Stochastic Volatility Model
+
 It evaluates the initial capital vs. success probability tradeoff for superhedging via customized loss functions and metrics.
 
 ## Structure

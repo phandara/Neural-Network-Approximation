@@ -11,7 +11,7 @@ from scipy.stats import norm
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.architecture import create_lstm_model
-from models.log_loss_function import log_sigmoid_quantile_loss
+from models.log_loss_function import augmented_quantile_loss_heston
 from models.metrics import prob_hedge, predicted_price
 from heston_monte_carlo import heston_monte_carlo
 
@@ -33,7 +33,7 @@ prob_success_list = []
 for mu in mu_values:
     print(f"\nEvaluating for mu = {mu}...")
 
-    loss_fn = log_sigmoid_quantile_loss(mu=mu, beta=1.0)
+    loss_fn = augmented_quantile_loss_heston(mu=mu)
     model = create_lstm_model(input_shape=input_shape)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn,
                   metrics=[prob_hedge, predicted_price])

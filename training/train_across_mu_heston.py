@@ -7,7 +7,7 @@ import tensorflow as tf
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.architecture import create_lstm_model
-from models.log_loss_function import log_sigmoid_quantile_loss
+from models.log_loss_function import augmented_quantile_loss_heston
 from models.metrics import prob_hedge, predicted_price
 from data.generator_heston import HestonDataGenerator
 
@@ -37,7 +37,7 @@ np.save("data/generated/Heston/y_test_heston.npy", y_test)
 for mu in mu_values:
     print(f"\n=== Training model with mu = {mu} ===")
 
-    loss_fn = log_sigmoid_quantile_loss(mu=mu, beta=1.0)
+    loss_fn = augmented_quantile_loss_heston(mu=mu)
     model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
     metrics_fn = [prob_hedge, predicted_price]
 

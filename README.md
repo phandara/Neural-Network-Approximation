@@ -5,36 +5,40 @@
 quantile-hedging-nn/
 │
 ├── data/
-│   └── generator.py            # Black-Scholes / Heston simulation
-│ 
+│   ├── generated/                                 # consisting generated data
+│   │   ├── BS/
+│   │   ├── Trinomial/                          
+│   │   └── Heston/                             
+│   ├── generator_bs.py                            # respective data generator         
+│   ├── generator_trinomial.py
+│   └── generator_heston.py
 │
-├── models/
-│   ├── architecture.py         # Model architecture definitions (LSTM, FFN, etc.)
-│   ├── loss_function.py        # Truncated sigmoid-based losses
-│   ├── log_loss_function.py    # Log-Loss
-│   ├── metrics.py              # Hedge probability, pricing metrics, etc.
-│   └── trainer.py              # Model compilation, training loop, callbacks
+├── training/                                      # training files
+│   ├── train_across_mu_bs.py
+│   ├── train_across_mu_trinomial.py
+│   └── train_across_mu_heston.py
 │
-├── experiments/
-│   ├── train_bs.py             # Training script on BS data
-│   ├── train_heston.py         # Training on Heston (later)
-│   └── analyze_results.py      # Post-training metrics and visualizations
+├── evaluation/                                    # evaluation files
+│   ├── bs_eval_across_mu.py
+│   ├── trinomial_eval_across_mu.py
+│   ├── heston_eval_across_mu.py
+│   └── heston_monte_carlo.py
 │
-├── plots/
-│   └── ...                     # Saved plot outputs
+├── models/                                        
+│   ├── BS/                                        # respective weights
+│   ├── Trinomial/
+│   ├── Heston/
+│   ├── architecture.py                            # NN architecture
+│   ├── loss_function.py                           # loss function for BS and trimonial model
+│   ├── heston_loss_function.py                    # Heston model loss
+│   └── metrics.py                                 # metrics file for nn model
 │
-├── notebooks/
-│   └── dev_tests.ipynb         # Prototyping notebook (for exploratory use)
+├── plots/                                         # relevant plots and visualization
+│   ├── BS/
+│   ├── Trinomial/
+│   └── Heston/
 │
-├── saved_models/
-│   └── bs_lambda_1000.h5       # Trained model weights
-│
-├── config/
-│   └── config.yaml             # Config file for paths, training params, model hyperparams
-│
-├── README.md
-├── requirements.txt
-└── .gitignore
+└── README.md
 
 ```
 

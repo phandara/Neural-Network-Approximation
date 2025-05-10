@@ -16,13 +16,13 @@ from models.metrics import prob_hedge, predicted_price
 
 # Parameters
 mu_values = [100, 1000, 5000, 10000, 22500, 30000]
-model_dir = "models/Trimonial"
-plot_dir = "plots/Trimonial"
+model_dir = "models/Trinomial"
+plot_dir = "plots/Trinomial"
 os.makedirs(plot_dir, exist_ok=True)
 
 # Load evaluation data
-x_test = np.load("data/generated/Trimonial/x_test_trinomial.npy")
-y_test = np.load("data/generated/Trimonial/y_test_trinomial.npy")
+x_test = np.load("data/generated/Trinomial/x_test_trinomial.npy")
+y_test = np.load("data/generated/Trinomial/y_test_trinomial.npy")
 input_shape = x_test.shape[1:]
 
 # Storage for results

@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-def log_sigmoid_quantile_loss(mu: float = 100):
+def augmented_quantile_loss_heston(mu: float = 100):
     
     def sigmoid_indicator(portfolio, H, beta=1.0):
         return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))

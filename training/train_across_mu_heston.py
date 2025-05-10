@@ -12,15 +12,14 @@ from models.metrics import prob_hedge, predicted_price
 from data.generator_heston import HestonDataGenerator
 
 # Parameters
-num_samples = 100000
+num_samples = 500000
 time_steps = 30
 learning_rate = 1e-4
 epochs = 70
 batch_size = 512
 
 # List of mu values to train over
-mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500]
-
+mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500, 10000, 12000, 15000, 17500, 20000]
 # Data generation
 print("Generating Heston data...")
 np.random.seed(1)

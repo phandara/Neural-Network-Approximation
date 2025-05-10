@@ -1,4 +1,7 @@
 import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+import os
 
 def augmented_quantile_loss(mu: float = 100):
     
@@ -23,4 +26,28 @@ def augmented_quantile_loss(mu: float = 100):
 
     return loss
 
+# Plotting the scaled truncated sigmoid loss
+if __name__ == "__main__":
+    x = np.linspace(-10, 10, 500)
+    betas = [0.5, 1.0, 2.0, 5.0]
+    
+    def l_beta(x, beta):
+        sigmoid_term = 1 / (1 + np.exp(-beta * x))
+        return np.square(np.maximum(sigmoid_term - 0.5, 0.0))
+    
+    plt.figure(figsize=(8, 6))
+    for beta in betas:
+        y = l_beta(x, beta)
+        plt.plot(x, y, label=f"$\\beta = {beta}$")
+
+    plt.title("Scaled Truncated Sigmoid Loss $l_\\beta(x)$")
+    plt.xlabel("$x$")
+    plt.ylabel("$l_\\beta(x)$")
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+
+    os.makedirs("models", exist_ok=True)
+    plt.savefig("models/loss_function_plot.png", dpi=300)
+    plt.close()
 

@@ -56,11 +56,9 @@ for mu in mu_values:
     portfolio = V0 + gains
 
     K = 100.0
-    B = 95.0
-    S_min = np.min(y_test[:, :, 0], axis=1)
-    barrier_hit = (S_min <= B).astype(np.float32)
-    call_payoff = np.maximum(y_test[:, -1, 0] - K, 0.0)
-    H = barrier_hit * call_payoff
+    avg_price = np.mean(y_test[:, 1:, 0], axis=1)
+    H = np.maximum(avg_price - K, 0.0)
+
 
     success_prob = np.mean(portfolio >= H)
     prob_success_list.append(success_prob)

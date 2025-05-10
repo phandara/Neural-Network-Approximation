@@ -1,13 +1,12 @@
 import numpy as np
-from scipy.stats import norm
 from typing import Tuple
 import matplotlib.pyplot as plt
 
-# Monte Carlo for Down-and-In Call option under Heston Model (Euler-Maruyama)
+# Monte Carlo for Asian Call option under Heston Model (Euler-Maruyama)
 def heston_monte_carlo(num_paths: int = 100000, time_steps: int = 30,
-                       S0: float = 100.0, K: float = 100.0, B: float = 95.0,
+                       S0: float = 100.0, K: float = 100.0,
                        v0: float = 0.04, kappa: float = 2.0, theta: float = 0.05,
-                       xi: float = 0.4, rho: float = -0.8, T: float = 30/250) -> float:
+                       xi: float = 0.4, rho: float = -0.8, T: float = 30/250) -> Tuple[float, float]:
 
     dt = T / time_steps
     S = np.zeros((num_paths, time_steps + 1))
@@ -31,15 +30,14 @@ def heston_monte_carlo(num_paths: int = 100000, time_steps: int = 30,
         S_prev = S[:, t - 1]
         S[:, t] = S_prev * np.exp(-0.5 * V_prev * dt + np.sqrt(V_prev * dt) * W1)
 
-    S_min = np.min(S, axis=1)
-    barrier_hit = S_min <= B
-    payoff = np.maximum(S[:, -1] - K, 0.0)
-    final_payoff = payoff * barrier_hit
+    # Compute average price and payoff for Asian call
+    avg_price = np.mean(S[:, 1:], axis=1)  # exclude S[:,0]
+    payoff = np.maximum(avg_price - K, 0.0)
 
-    price_estimate = np.mean(final_payoff)
-    std_error = np.std(final_payoff) / np.sqrt(num_paths)
+    price_estimate = np.mean(payoff)
+    std_error = np.std(payoff) / np.sqrt(num_paths)
     return price_estimate, std_error
 
 if __name__ == "__main__":
     price, stderr = heston_monte_carlo()
-    print(f"Monte Carlo estimated price (Down-and-In Call under Heston): {price:.4f} ± {1.96*stderr:.4f}")
+    print(f"Monte Carlo estimated price (Asian Call under Heston): {price:.4f} ± {1.96*stderr:.4f}")

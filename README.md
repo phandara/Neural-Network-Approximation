@@ -1,6 +1,13 @@
 # Neural-Network-Approximation
 
 ## Structure
+This repository contains a numerical framework to approximate superhedging prices of financial derivatives using LSTM-based neural networks under different market models. The framework supports:
+
+Black–Scholes (BS) Model
+Trinomial Tree Model
+Heston Stochastic Volatility Model
+It evaluates the initial capital vs. success probability tradeoff for superhedging via customized loss functions and metrics.
+
 ```
 quantile-hedging-nn/
 │
@@ -45,9 +52,9 @@ quantile-hedging-nn/
 ## Checklist
 | Component              | Done? | Notes                                               |
 | ---------------------- | ----- | --------------------------------------------------- |
-| Model generator        | ✅     | Re-implement from scratch or re-use cleaned version |
+| Model generator        | ✅     | Re-implement from scratch                           |
 | LSTM model             | ✅     | Modular, test on synthetic data                     |
 | Loss Function          | ✅     | Careful TensorFlow implementation                   |
-| Training loop          | ✅     | Save models for different λ                         |
+| Training loop          | ✅     | Save models for different mu                        |
 | Evaluation pipeline    | ✅     | Plots, performance stats, CSV export                |
 | Visualizations         | ✅     | Quantile plot, probability plot, histograms         |

@@ -64,7 +64,7 @@ for mu in mu_values:
     prob_success_list.append(success_prob)
 
     # Plot distribution
-    plt.figure(figsize=(6, 4))
+    plt.figure(figsize=(8, 6))
     plt.hist(portfolio - H, bins=50)
     plt.title(f"Portfolio - Barrier Payoff, mu = {mu}")
     plt.xlabel("Portfolio - H")

@@ -79,14 +79,6 @@ for mu in mu_values:
 
 # ---------- Plots ----------
 plt.figure(figsize=(8, 6))
-plt.plot(mu_values[:len(V0_list)], V0_list, marker='o')
-plt.xlabel("Mu (penalty weight)")
-plt.ylabel("Initial Capital V0")
-plt.title("Initial Capital vs. Mu")
-plt.grid(True)
-plt.savefig(os.path.join(plot_dir, "v0_vs_mu.png"))
-
-plt.figure(figsize=(8, 6))
 plt.plot(mu_values[:len(prob_success_list)], prob_success_list, marker='o')
 plt.xlabel("Mu (penalty weight)")
 plt.ylabel("Success Probability")
@@ -132,3 +124,15 @@ sigma = 0.1
 T = 30 / 250
 bs_price = bs_call_price(S0, K, T, sigma)
 print(f"📌 Black-Scholes price for the call: {bs_price:.4f}")
+
+# --- Plot Initial Capital vs Mu with BS Benchmark ---
+plt.figure(figsize=(8, 6))
+plt.plot(mu_values[:len(V0_list)], V0_list, marker='o', label="NN Approximation")
+plt.axhline(y=bs_price, color='red', linestyle='--', label=f"BS Benchmark ({bs_price:.2f})")
+plt.xlabel("Mu (penalty weight)")
+plt.ylabel("Initial Capital $V_0$")
+plt.title("Initial Capital vs. Mu")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.savefig(os.path.join(plot_dir, "v0_vs_mu.png"))

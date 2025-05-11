@@ -108,5 +108,41 @@ df = pd.DataFrame({
     "prob_success": prob_success_list
 })
 df.to_csv(os.path.join(model_dir, "mu_results_trinomial.csv"), index=False)
+# ---------- Combined Histogram ----------
+plt.figure(figsize=(10, 6))
+colors = plt.cm.viridis(np.linspace(0, 1, len(mu_values)))
+bins = np.linspace(-2.5, 2.5, 60)  # fixed bin range for consistency
+
+for i, mu in enumerate(mu_values):
+    weight_path = os.path.join(model_dir, f"lstm_trinomial_mu_{mu}.weights.h5")
+    if not os.path.exists(weight_path):
+        continue
+
+    # Recompute portfolio - H for overlay histogram
+    loss_fn = augmented_quantile_loss(mu=mu)
+    model = create_lstm_model(input_shape=input_shape)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)
+    model.load_weights(weight_path)
+    y_pred = model.predict(x_test, verbose=0)
+
+    V0 = y_pred[:, 0, 0]
+    delta = y_pred[:, 1:, :]
+    price_incr = y_test[:, 1:, :] - y_test[:, :-1, :]
+    gains = np.sum(delta * price_incr, axis=(1, 2))
+    portfolio = V0 + gains
+    H = np.maximum(y_test[:, -1, 0] - K, 0.0)
+    diff = portfolio - H
+
+    plt.hist(diff, bins=bins, alpha=0.4, label=f"$\mu$={mu}", color=colors[i], density=True)
+
+plt.xlabel("Portfolio - Payoff")
+plt.ylabel("Density")
+plt.title("Portfolio - H for Different $\mu$ (Trinomial Model)")
+plt.xlim(-2.5, 2.5)
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.savefig(os.path.join(plot_dir, "histogram_overlay_trinomial.png"))
+plt.close()
 
 print("\n✅ Trinomial evaluation complete. Results saved.")

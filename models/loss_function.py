@@ -5,7 +5,7 @@ import os
 
 def augmented_quantile_loss(mu: float = 100):
     
-    def sigmoid_indicator(portfolio, H, beta=1.0):
+    def sigmoid_indicator(portfolio, H, beta=0.75):
         return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))
 
     def loss(y_true, y_pred):

@@ -14,7 +14,7 @@ from models.loss_function import augmented_quantile_loss
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
-mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500]
+mu_values = [10, 100, 500, 1000, 3000, 5000, 7500, 15000]
 model_dir = "models/BS"
 plot_dir = "plots/BS"
 os.makedirs(plot_dir, exist_ok=True)

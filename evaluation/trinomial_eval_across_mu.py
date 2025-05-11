@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from data.generator_trimonial import TrinomialDataGenerator
 from models.architecture import create_lstm_model
-from models.loss_function import augmented_quantile_loss
+from models.trinomial_loss_function import augmented_quantile_loss
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters

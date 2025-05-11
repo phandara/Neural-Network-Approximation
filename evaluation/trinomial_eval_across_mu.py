@@ -109,7 +109,7 @@ df = pd.DataFrame({
 })
 df.to_csv(os.path.join(model_dir, "mu_results_trinomial.csv"), index=False)
 # ---------- Combined Histogram ----------
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 colors = plt.cm.viridis(np.linspace(0, 1, len(mu_values)))
 bins = np.linspace(-2.5, 2.5, 60)  # fixed bin range for consistency
 

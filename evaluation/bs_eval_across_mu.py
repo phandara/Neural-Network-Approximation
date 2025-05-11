@@ -11,7 +11,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from data.generator_bs import DataGenerator
 from models.architecture import create_lstm_model
 from models.loss_function import augmented_quantile_loss
-from models.heston_loss_function import log_sigmoid_quantile_loss
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
@@ -36,7 +35,6 @@ for mu in mu_values:
     loss_fn = augmented_quantile_loss(mu=mu)
     model = create_lstm_model(input_shape=input_shape)
     metrics_fn = [prob_hedge, predicted_price]
-    #loss_fn = log_sigmoid_quantile_loss(mu=mu)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn, metrics=metrics_fn)
 
     # Load pre-trained weights
@@ -69,7 +67,7 @@ for mu in mu_values:
     # Probability of successful hedge
     success_prob = np.mean(portfolio >= H)
     prob_success_list.append(success_prob)
-    plt.figure(figsize=(6, 4))
+    plt.figure(figsize=(8, 6))
     plt.hist(portfolio - H, bins=50)
     plt.title(f'Portfolio - Payoff, μ = {mu}')
     plt.xlabel("Portfolio - H")

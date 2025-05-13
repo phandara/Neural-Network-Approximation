@@ -13,13 +13,13 @@ from data.generator_heston import HestonDataGenerator
 
 # Parameters
 num_samples = 500000
-time_steps = 30
+time_steps = 60
 learning_rate = 1e-4
 epochs = 70
 batch_size = 512
 
 # List of mu values to train over
-mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 7500, 10000, 15000, 20000]
+mu_values = [100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000]
 # Data generation
 print("Generating Heston data...")
 np.random.seed(1)

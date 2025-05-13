@@ -3,10 +3,10 @@ from typing import Tuple
 import matplotlib.pyplot as plt
 
 # Monte Carlo for Asian Call option under Heston Model (Euler-Maruyama)
-def heston_monte_carlo(num_paths: int = 1000000, time_steps: int = 30,
+def heston_monte_carlo(num_paths: int = 1000000, time_steps: int = 60,
                        S0: float = 100.0, K: float = 100.0,
                        v0: float = 0.04, kappa: float = 2.0, theta: float = 0.05,
-                       xi: float = 0.4, rho: float = -0.8, T: float = 30/250) -> Tuple[float, float]:
+                       xi: float = 0.4, rho: float = -0.8, T: float = 60/500) -> Tuple[float, float]:
 
     dt = T / time_steps
     S = np.zeros((num_paths, time_steps + 1))

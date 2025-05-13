@@ -16,7 +16,7 @@ from models.metrics import prob_hedge, predicted_price
 from heston_monte_carlo import heston_monte_carlo
 
 # Parameters
-mu_values = [100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000]
+mu_values = [10, 100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000]
 model_dir = "models/Heston"
 plot_dir = "plots/Heston"
 os.makedirs(plot_dir, exist_ok=True)

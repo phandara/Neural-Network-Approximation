@@ -2,7 +2,7 @@ import tensorflow as tf
 
 def augmented_quantile_loss_heston(mu: float = 100):
     
-    def sigmoid_indicator(portfolio, H, beta=1.0):
+    def sigmoid_indicator(portfolio, H, beta=0.7):
         return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))
 
     def loss(y_true, y_pred):

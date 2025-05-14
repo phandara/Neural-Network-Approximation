@@ -39,5 +39,6 @@ def heston_monte_carlo(num_paths: int = 1000000, time_steps: int = 60,
     return price_estimate, std_error
 
 if __name__ == "__main__":
+    np.random.seed(1)
     price, stderr = heston_monte_carlo()
     print(f"Monte Carlo estimated price (Asian Call under Heston): {price:.4f} ± {1.96*stderr:.4f}")

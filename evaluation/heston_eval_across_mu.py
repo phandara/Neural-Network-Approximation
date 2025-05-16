@@ -86,6 +86,7 @@ plt.fill_between(mu_values[:len(V0_list)], mc_price - 1.96*mc_error, mc_price + 
 plt.xlabel("Mu")
 plt.ylabel("Initial Capital V0")
 plt.title("Initial Capital vs. Mu (Heston)")
+plt.ylim(bottom=0.25)  # Start y-axis at 0.25
 plt.legend()
 plt.grid(True)
 plt.savefig(os.path.join(plot_dir, "heston_v0_vs_mu.png"))

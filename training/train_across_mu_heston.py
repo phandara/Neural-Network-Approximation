@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.architecture import create_lstm_model
 from models.heston_loss_function import augmented_quantile_loss_heston
-from models.metrics import prob_hedge, predicted_price
+from models.metrics_asian_option import prob_hedge, predicted_price
 from data.generator_heston import HestonDataGenerator
 
 # Parameters

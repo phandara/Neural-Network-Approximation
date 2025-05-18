@@ -14,7 +14,7 @@ from data.generator_heston import HestonDataGenerator
 # Parameters
 num_samples = 500000
 time_steps = 60
-learning_rate = 1e-4
+learning_rate = 1e-4 
 epochs = 70
 batch_size = 512
 

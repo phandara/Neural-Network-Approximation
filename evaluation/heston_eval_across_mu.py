@@ -28,6 +28,7 @@ input_shape = x_test.shape[1:]
 
 # Storage for results
 V0_list = []
+V0_std_list = []
 prob_success_list = []
 
 for mu in mu_values:
@@ -48,7 +49,9 @@ for mu in mu_values:
 
     V0 = y_pred[:, 0, 0]
     V0_mean = np.mean(V0)
+    V0_std = np.std(V0, ddof = 1)
     V0_list.append(V0_mean)
+    V0_std_list.append(V0_std)
 
     delta = y_pred[:, 1:, :]
     price_incr = y_test[:, 1:, :] - y_test[:, :-1, :]
@@ -111,6 +114,7 @@ plt.savefig(os.path.join(plot_dir, "heston_pareto_frontier.png"))
 df = pd.DataFrame({
     "mu": mu_values[:len(V0_list)],
     "V0": V0_list,
+    "V0_std": V0_std,
     "prob_success": prob_success_list
 })
 df.to_csv(os.path.join(model_dir, "heston_mu_results.csv"), index=False)

@@ -7,18 +7,18 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from data.generator_bs import DataGenerator
 from models.bs_loss_function import augmented_quantile_loss
-from models.architecture import create_lstm_model
+from models.architecture import create_two_head_model, QuantileHedgeModel
 from models.metrics import prob_hedge, predicted_price
 
 # Parameters
-num_samples = 100000
+num_samples = 100000*5
 time_steps = 30
 learning_rate = 1e-4
 epochs = 70
 batch_size = 256*2
-
+#
 # List of mu values to train over
-mu_values = [10, 100, 500, 1000, 3000, 5000, 7500, 15000]
+mu_values = [10, 100, 500, 1000, 3000, 5000, 7500, 15000, 20000]
 
 # Prepare data
 print("Generating data...")
@@ -35,22 +35,15 @@ np.save("data/generated/BS/y_test.npy", y_test)
 for mu in mu_values:
     print(f"\n=== Training model with mu = {mu} ===")
 
-    # Build and compile model
-    loss_fn = augmented_quantile_loss(mu=mu)
-    model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
-    metrics_fn = [prob_hedge, predicted_price]
-    #loss_fn = log_sigmoid_quantile_loss(mu=mu)
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss_fn, metrics=metrics_fn)
+    base_model = create_two_head_model(input_shape=input_shape)
+    model = QuantileHedgeModel(base_model, mu)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate))
 
-    # Train model
-    model.fit(x_train, y_train,
-              epochs=epochs,
-              batch_size=batch_size)
+    model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
 
-    # Save weights
-    os.makedirs("models", exist_ok=True)
+    # Save the base model weights (not wrapper)
     weight_path = f"models/BS/lstm_quantile_mu_{mu}.weights.h5"
-    model.save_weights(weight_path)
+    base_model.save_weights(weight_path)
     print(f"Saved weights to: {weight_path}")
 
 print("\n✅ All trainings complete.")

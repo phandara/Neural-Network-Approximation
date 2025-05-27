@@ -1,29 +1,64 @@
 import tensorflow as tf
-from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import LSTM, Dense, Activation # type: ignore
-from tensorflow.keras.optimizers import Adam # type: ignore
+from tensorflow.keras.models import Model  # type: ignore
+from tensorflow.keras.layers import (Input, LSTM, Dense, Activation, RepeatVector, TimeDistributed, Lambda)  # type: ignore
 
-def create_lstm_model(input_shape, lstm_units=30, output_dim=1, learning_rate=1e-4,):
-    model = Sequential()
+def create_two_head_model(input_shape, lstm_units=30):
+    inp = Input(shape=input_shape)
 
-    # First LSTM Layer
-    model.add(LSTM(units=lstm_units,
-                   return_sequences=True,
-                   input_shape=input_shape,
-                   kernel_initializer='TruncatedNormal',
-                   bias_initializer='TruncatedNormal'))
-    model.add(Activation('swish'))
+    # Shared LSTM encoder (compresses full path into one vector)
+    x = LSTM(lstm_units, return_sequences=True)(inp)
+    x = Activation('swish')(x)
+    x = LSTM(lstm_units, return_sequences=True)(x)
+    x = Activation('swish')(x)
 
-    # Second LSTM Layer
-    model.add(LSTM(units=lstm_units,
-                   return_sequences=True))
-    model.add(Activation('swish'))
+    # Head for V₀ (scalar)
+    v0_features = Lambda(lambda t: t[:, 0, :])(x)  # shape: (batch_size, lstm_units)
+    pooled = tf.keras.layers.GlobalAveragePooling1D()(x)  # shape: (batch_size, lstm_units)
+    v0 = Dense(1, activation='swish')(pooled)
+    v0 = Activation('swish')(v0)
 
-    # Final Dense Layer
-    model.add(Dense(output_dim))
-    model.add(Activation('swish'))
+    # Head for Δ: decode from shared representation
+    # Repeat shared vector T-1 times (to match ΔS_t count)
+    delta_features = Lambda(lambda t: t[:, 1:, :])(x)  # shape: (batch_size, T-1, lstm_units)
+    delta = TimeDistributed(Dense(1, activation='swish'))(delta_features)  # shape: (batch_size, T-1, 1)
 
-    # Compiling in training
-
+    model = Model(inputs=inp, outputs=[v0, delta])
     return model
 
+
+class QuantileHedgeModel(tf.keras.Model):
+    def __init__(self, base_model, mu):
+        super().__init__()
+        self.model = base_model
+        self.mu = mu
+
+    def compile(self, optimizer):
+        super().compile()
+        self.optimizer = optimizer
+
+    def train_step(self, data):
+        x, y_true = data
+
+        with tf.GradientTape() as tape:
+            v0_pred, delta_pred = self.model(x, training=True)
+            v0_pred = tf.squeeze(v0_pred, axis=-1)
+
+            # Compute portfolio value
+            price_incr = y_true[:, 1:, :] - y_true[:, :-1, :]
+            gains = tf.reduce_sum(delta_pred * price_incr, axis=[1, 2])
+            portfolio = v0_pred + gains
+
+            K = 100.0
+            H = tf.maximum(y_true[:, -1, 0] - K, 0.0)
+
+            def sigmoid_indicator(portfolio, H, beta=0.75):
+                return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))
+
+            L1 = tf.reduce_mean(tf.square(v0_pred))
+            L2 = self.mu * tf.reduce_mean(sigmoid_indicator(portfolio, H))
+            total_loss = L1 + L2
+
+        grads = tape.gradient(total_loss, self.trainable_variables)
+        self.optimizer.apply_gradients(zip(grads, self.trainable_variables))
+
+        return {"loss": total_loss}

@@ -3,28 +3,29 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-def augmented_quantile_loss(mu: float = 100):
-    
-    def sigmoid_indicator(portfolio, H, beta=0.75):
+def augmented_quantile_loss(mu=100):
+
+    def sigmoid_indicator(portfolio, H, beta=0.5):
         return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))
 
     def loss(y_true, y_pred):
-        V0 = y_pred[:, 0, 0]
-        delta = y_pred[:, 1:, :]
-        price_incr = y_true[:, 1:, :] - y_true[:, :-1, :]
-        # Payoff
-        K = 100
+        v0_pred = y_pred[0]
+        delta_pred = y_pred[1]
+        v0_pred = tf.squeeze(v0_pred, axis=-1)  # (batch_size,)
+        
+        price_incr = y_true[:, 1:, :] - y_true[:, :-1, :]  # (batch_size, T-1, 1)
+        gains = tf.reduce_sum(delta_pred * price_incr, axis=[1, 2])  # (batch_size,)
+        portfolio = v0_pred + gains
+
+        K = 100.0
         H = tf.maximum(y_true[:, -1, 0] - K, 0.0)
 
-        gains = tf.reduce_sum(delta * price_incr, axis=[1,2])
-        portfolio = V0 + gains
-        
-        L1 = tf.reduce_mean(tf.square(V0))
+        L1 = tf.reduce_mean(tf.square(v0_pred))
         L2 = mu * tf.reduce_mean(sigmoid_indicator(portfolio, H))
-
         return L1 + L2
 
     return loss
+
 
 # Plotting the scaled truncated sigmoid loss
 if __name__ == "__main__":

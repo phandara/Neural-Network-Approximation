@@ -6,9 +6,7 @@ import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from data.generator_bs import DataGenerator
-from models.bs_loss_function import augmented_quantile_loss
 from models.architecture import create_two_head_model, QuantileHedgeModel
-from models.metrics import prob_hedge, predicted_price
 
 # Parameters
 num_samples = 100000*5
@@ -36,7 +34,7 @@ for mu in mu_values:
     print(f"\n=== Training model with mu = {mu} ===")
 
     base_model = create_two_head_model(input_shape=input_shape)
-    model = QuantileHedgeModel(base_model, mu)
+    model = QuantileHedgeModel(base_model, mu, beta = 0.75)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate))
 
     model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)

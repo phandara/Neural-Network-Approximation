@@ -27,10 +27,11 @@ def create_two_head_model(input_shape, lstm_units=30):
 
 
 class QuantileHedgeModel(tf.keras.Model):
-    def __init__(self, base_model, mu):
+    def __init__(self, base_model, mu, beta):
         super().__init__()
         self.model = base_model
         self.mu = mu
+        self.beta = beta
 
     def compile(self, optimizer):
         super().compile()
@@ -51,11 +52,11 @@ class QuantileHedgeModel(tf.keras.Model):
             K = 100.0
             H = tf.maximum(y_true[:, -1, 0] - K, 0.0)
 
-            def sigmoid_indicator(portfolio, H, beta=0.75):
+            def sigmoid_indicator(portfolio, H, beta):
                 return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))
 
             L1 = tf.reduce_mean(tf.square(v0_pred))
-            L2 = self.mu * tf.reduce_mean(sigmoid_indicator(portfolio, H))
+            L2 = self.mu * tf.reduce_mean(sigmoid_indicator(portfolio, H, self.beta))
             total_loss = L1 + L2
 
         grads = tape.gradient(total_loss, self.trainable_variables)

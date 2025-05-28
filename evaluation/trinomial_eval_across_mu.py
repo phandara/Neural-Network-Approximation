@@ -9,13 +9,11 @@ from scipy.stats import norm
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data.generator_trimonial import TrinomialDataGenerator
-from models.architecture import create_lstm_model
-from models.trinomial_loss_function import augmented_quantile_loss
-from models.metrics import prob_hedge, predicted_price
+from models.architecture import create_two_head_model
 
 # Parameters
-mu_values = [100, 1000, 5000, 10000, 22500, 30000]
+#100, 1000, 5000, 10000, 22500, 30000
+mu_values = [30000]
 model_dir = "models/Trinomial"
 plot_dir = "plots/Trinomial"
 os.makedirs(plot_dir, exist_ok=True)
@@ -27,16 +25,16 @@ input_shape = x_test.shape[1:]
 
 # Storage for results
 V0_list = []
+V0_std_list = []
 prob_success_list = []
+
 
 for mu in mu_values:
     print(f"\nEvaluating for mu = {mu} on trinomial model...")
 
     # Build and compile model
-    loss_fn = augmented_quantile_loss(mu=mu)
-    model = create_lstm_model(input_shape=input_shape)
-    metrics_fn = [prob_hedge, predicted_price]
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn, metrics=metrics_fn)
+    model = create_two_head_model(input_shape=input_shape)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4))
 
     # Load pre-trained weights
     weight_path = os.path.join(model_dir, f"lstm_trinomial_mu_{mu}.weights.h5")
@@ -46,15 +44,16 @@ for mu in mu_values:
     model.load_weights(weight_path)
 
     # Predict
-    y_pred = model.predict(x_test, verbose=0)
+    v0_pred, delta_pred = model.predict(x_test, verbose=0)
+    V0 = v0_pred.squeeze()                    # (batch_size,)
+    delta = delta_pred 
 
-    # Extract initial capital
-    V0 = y_pred[:, 0, 0]
     V0_mean = np.mean(V0)
+    V0_std = np.std(V0)
     V0_list.append(V0_mean)
+    V0_std_list.append(V0_std)
 
     # Compute portfolio
-    delta = y_pred[:, 1:, :]
     price_incr = y_test[:, 1:, :] - y_test[:, :-1, :]
     gains = np.sum(delta * price_incr, axis=(1, 2))
     portfolio = V0 + gains
@@ -108,6 +107,7 @@ plt.savefig(os.path.join(plot_dir, "pareto_frontier_trinomial.png"))
 df = pd.DataFrame({
     "mu": mu_values[:len(V0_list)],
     "V0": V0_list,
+    "V0_std": V0_std_list,
     "prob_success": prob_success_list
 })
 df.to_csv(os.path.join(model_dir, "mu_results_trinomial.csv"), index=False)
@@ -122,14 +122,13 @@ for i, mu in enumerate(mu_values):
         continue
 
     # Recompute portfolio - H for overlay histogram
-    loss_fn = augmented_quantile_loss(mu=mu)
-    model = create_lstm_model(input_shape=input_shape)
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)
+    model = create_two_head_model(input_shape=input_shape)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4))
     model.load_weights(weight_path)
     y_pred = model.predict(x_test, verbose=0)
 
-    V0 = y_pred[:, 0, 0]
-    delta = y_pred[:, 1:, :]
+    V0 = y_pred[0].squeeze()
+    delta = y_pred[1]
     price_incr = y_test[:, 1:, :] - y_test[:, :-1, :]
     gains = np.sum(delta * price_incr, axis=(1, 2))
     portfolio = V0 + gains

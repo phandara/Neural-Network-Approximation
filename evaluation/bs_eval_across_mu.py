@@ -8,13 +8,10 @@ from scipy.stats import norm
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data.generator_bs import DataGenerator
-from models.architecture import create_two_head_model, QuantileHedgeModel
-from models.bs_loss_function import augmented_quantile_loss
-from models.metrics import prob_hedge, predicted_price
+from models.architecture import create_two_head_model
+
 
 # Parameters
-# 100, 500, 1000, 3000, 5000, 7500,
 mu_values = [10, 100, 500, 1000, 3000, 5000, 7500, 15000]
 model_dir = "models/BS"
 plot_dir = "plots/BS"
@@ -32,12 +29,9 @@ prob_success_list = []
 
 for mu in mu_values:
     print(f"\nEvaluating for mu = {mu}...")
-    
     # Build and compile model
-    loss_fn = augmented_quantile_loss(mu=mu)
     model = create_two_head_model(input_shape=input_shape)
-    metrics_fn = [prob_hedge, predicted_price]
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn)#, metrics=metrics_fn
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4))#,loss=loss_fn, metrics=metrics_fn
 
     # Load pre-trained weights
     weight_path = os.path.join(model_dir, f"lstm_quantile_mu_{mu}.weights.h5")

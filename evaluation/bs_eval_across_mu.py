@@ -15,7 +15,7 @@ from models.metrics import prob_hedge, predicted_price
 
 # Parameters
 # 100, 500, 1000, 3000, 5000, 7500,
-mu_values = [10, 100, 500, 1000, 3000, 5000, 7500, 15000, 20000]
+mu_values = [10, 100, 500, 1000, 3000, 5000, 7500, 15000]
 model_dir = "models/BS"
 plot_dir = "plots/BS"
 os.makedirs(plot_dir, exist_ok=True)

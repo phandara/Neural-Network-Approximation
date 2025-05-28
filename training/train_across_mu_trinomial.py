@@ -13,7 +13,7 @@ from models.architecture import create_two_head_model, QuantileHedgeModel
 num_samples = 500000*2
 time_steps = 30
 learning_rate = 1e-4
-epochs = 40 * 2
+epochs = 40
 batch_size = 512*2
 #100, 1000, 5000, 10000, 22500, 27500, 30000, 40000,
 # List of mu values to train over

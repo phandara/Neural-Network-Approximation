@@ -10,14 +10,14 @@ from data.generator_trimonial import TrinomialDataGenerator
 from models.architecture import create_two_head_model, QuantileHedgeModel
 
 # Parameters
-num_samples = 500000*2
+num_samples = 500000*2*2
 time_steps = 30
 learning_rate = 1e-4
 epochs = 40
 batch_size = 512*2
 #100, 1000, 5000, 10000, 22500, 27500, 30000, 40000,
 # List of mu values to train over
-mu_values = [30000]
+mu_values = [25000]
 
 # Prepare data
 print("Generating trinomial data...")

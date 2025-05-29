@@ -13,7 +13,7 @@ from models.architecture import create_two_head_model
 
 # Parameters
 #100, 1000, 5000, 10000, 22500, 30000
-mu_values = [30000]
+mu_values = [100, 1000, 5000, 10000, 15000, 20000, 25000, 30000]
 model_dir = "models/Trinomial"
 plot_dir = "plots/Trinomial"
 os.makedirs(plot_dir, exist_ok=True)

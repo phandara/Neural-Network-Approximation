@@ -112,7 +112,7 @@ plt.savefig(os.path.join(plot_dir, "heston_pareto_frontier.png"))
 df = pd.DataFrame({
     "mu": mu_values[:len(V0_list)],
     "V0": V0_list,
-    #"V0_std": V0_std,
+    "V0_std": V0_std,
     "prob_success": prob_success_list
 })
 df.to_csv(os.path.join(model_dir, "heston_mu_results.csv"), index=False)

@@ -17,7 +17,7 @@ epochs = 40
 batch_size = 512*2
 #100, 1000, 5000, 10000, 22500, 27500, 30000, 40000,
 # List of mu values to train over
-mu_values = [25000]
+mu_values = [16000]
 
 # Prepare data
 print("Generating trinomial data...")

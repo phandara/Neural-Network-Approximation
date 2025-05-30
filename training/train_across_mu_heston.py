@@ -6,20 +6,19 @@ import tensorflow as tf
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from models.architecture import create_lstm_model
-from models.heston_loss_function import augmented_quantile_loss_heston
-from models.metrics_asian_option import prob_hedge, predicted_price
+from models.heston_architecture import create_two_head_model, QuantileHedgeModel
 from data.generator_heston import HestonDataGenerator
 
 # Parameters
-num_samples = 500000
+num_samples = 500000*4
 time_steps = 60
 learning_rate = 1e-4 
 epochs = 70
 batch_size = 512
 
 # List of mu values to train over
-mu_values = [50, 100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000, 50000]
+#50, 100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000, 
+mu_values = [50000]
 # Data generation
 print("Generating Heston data...")
 np.random.seed(1)
@@ -36,20 +35,15 @@ np.save("data/generated/Heston/y_test_heston.npy", y_test)
 for mu in mu_values:
     print(f"\n=== Training model with mu = {mu} ===")
 
-    loss_fn = augmented_quantile_loss_heston(mu=mu)
-    model = create_lstm_model(input_shape=input_shape, learning_rate=learning_rate)
-    metrics_fn = [prob_hedge, predicted_price]
+    base_model = create_two_head_model(input_shape=input_shape)
+    model = QuantileHedgeModel(base_model, mu, beta = 0.75)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate))
 
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss=loss_fn, metrics=metrics_fn)
-
-    model.fit(x_train, y_train,
-              epochs=epochs,
-              batch_size=batch_size,
-              verbose=2)
+    model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
 
     # Save model weights
     os.makedirs("models", exist_ok=True)
-    model.save_weights(f"models/Heston/lstm_heston_mu_{mu}.weights.h5")
+    base_model.save_weights(f"models/Heston/lstm_heston_mu_{mu}.weights.h5")
     print(f"Saved weights for mu = {mu}")
 
 print("\n✅ All Heston trainings complete.")

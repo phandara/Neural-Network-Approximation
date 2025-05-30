@@ -10,13 +10,12 @@ from scipy.stats import norm
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from models.architecture import create_lstm_model
-from models.heston_loss_function import augmented_quantile_loss_heston
-from models.metrics_asian_option import prob_hedge, predicted_price
+from models.heston_architecture import create_two_head_model
 from heston_monte_carlo import heston_monte_carlo
 
 # Parameters
-mu_values = [50, 100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000, 50000]
+# 50, 100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000, 
+mu_values = [50000]
 model_dir = "models/Heston"
 plot_dir = "plots/Heston"
 os.makedirs(plot_dir, exist_ok=True)
@@ -34,32 +33,31 @@ prob_success_list = []
 for mu in mu_values:
     print(f"\nEvaluating for mu = {mu}...")
 
-    loss_fn = augmented_quantile_loss_heston(mu=mu)
-    model = create_lstm_model(input_shape=input_shape)
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4), loss=loss_fn,
-                  metrics=[prob_hedge, predicted_price])
+    model = create_two_head_model(input_shape=input_shape)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4))
 
     weight_path = os.path.join(model_dir, f"lstm_heston_mu_{mu}.weights.h5")
     if not os.path.exists(weight_path):
         print(f"❌ Weights not found for mu = {mu}, skipping...")
         continue
-
     model.load_weights(weight_path)
-    y_pred = model.predict(x_test, verbose=0)
 
-    V0 = y_pred[:, 0, 0]
+    # Predict
+    v0_pred, delta_pred = model.predict(x_test, verbose=0)
+    V0 = v0_pred.squeeze()
+    delta = delta_pred 
+
     V0_mean = np.mean(V0)
-    V0_std = np.std(V0, ddof = 1)
+    V0_std = np.std(V0)
     V0_list.append(V0_mean)
     V0_std_list.append(V0_std)
 
-    delta = y_pred[:, 1:, :]
     price_incr = y_test[:, 1:, :] - y_test[:, :-1, :]
     gains = np.sum(delta * price_incr, axis=(1, 2))
     portfolio = V0 + gains
 
     K = 100.0
-    avg_price = np.mean(y_test[:, 1:, 0], axis=1)
+    avg_price = np.mean(y_test[:, :, 0], axis=1)
     H = np.maximum(avg_price - K, 0.0)
 
 
@@ -69,7 +67,7 @@ for mu in mu_values:
     # Plot distribution
     plt.figure(figsize=(8, 6))
     plt.hist(portfolio - H, bins=50)
-    plt.title(f"Portfolio - Barrier Payoff, mu = {mu}")
+    plt.title(f"Portfolio - Asian Payoff, mu = {mu}")
     plt.xlabel("Portfolio - H")
     plt.grid(True)
     plt.tight_layout()
@@ -78,7 +76,7 @@ for mu in mu_values:
 
 # Monte Carlo theoretical price
 mc_price, mc_error = heston_monte_carlo()
-print(f"\n📌 MC Estimated Barrier Option Price: {mc_price:.4f} ± {1.96 * mc_error:.4f}")
+print(f"\n📌 MC Estimated Asian Option Price: {mc_price:.4f} ± {1.96 * mc_error:.4f}")
 
 # Summary plots
 plt.figure(figsize=(8, 6))

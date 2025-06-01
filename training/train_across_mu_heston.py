@@ -17,7 +17,6 @@ epochs = 70
 batch_size = 512
 
 # List of mu values to train over
-#50, 100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000, 50000
 mu_values = [75000]
 # Data generation
 print("Generating Heston data...")

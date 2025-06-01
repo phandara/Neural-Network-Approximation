@@ -14,7 +14,6 @@ from models.heston_architecture import create_two_head_model
 from heston_monte_carlo import heston_monte_carlo
 
 # Parameters
-# 50, 100, 200, 500, 1000, 3000, 5000, 10000, 20000, 30000, 
 mu_values = [100, 1000, 10000, 50000, 75000]
 model_dir = "models/Heston"
 plot_dir = "plots/Heston"
@@ -112,7 +111,7 @@ plt.savefig(os.path.join(plot_dir, "heston_pareto_frontier.png"))
 df = pd.DataFrame({
     "mu": mu_values[:len(V0_list)],
     "V0": V0_list,
-    "V0_std": V0_std,
+    "V0_std": V0_std_list,
     "prob_success": prob_success_list
 })
 df.to_csv(os.path.join(model_dir, "heston_mu_results.csv"), index=False)

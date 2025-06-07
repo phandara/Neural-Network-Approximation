@@ -1,11 +1,11 @@
 # Neural-Network-Approximation
 
-This repository contains a numerical framework to approximate superhedging prices of financial derivatives using LSTM-based neural networks under different market models. The framework supports:
+This repository contains a numerical framework to approximate superhedging prices of financial derivatives using LSTM-based neural networks under different market models. The framework is implemented for:
 - Black–Scholes (BS) Model
 - Trinomial Tree Model
 - Heston Stochastic Volatility Model
 
-It evaluates the initial capital vs. success probability tradeoff for superhedging via customized loss functions and metrics.
+It evaluates the initial capital vs. success probability tradeoff for superhedging via customized loss functions.
 
 ## Structure
 ```
@@ -29,16 +29,14 @@ quantile-hedging-nn/
 │   ├── bs_eval_across_mu.py
 │   ├── trinomial_eval_across_mu.py
 │   ├── heston_eval_across_mu.py
-│   └── heston_monte_carlo.py
+│   └── heston_monte_carlo.py                     # MC price as benchmark
 │
 ├── models/                                        
 │   ├── BS/                                       # respective weights
 │   ├── Trinomial/
 │   ├── Heston/
-│   ├── architecture.py                           # NN architecture
-│   ├── loss_function.py                          # loss function for BS and trimonial model
-│   ├── heston_loss_function.py                   # Heston model loss
-│   └── metrics.py                                # metrics file for nn model
+│   ├── architecture.py                           # NN architecture for European Call Option
+│   └── heston_architecture.py                    # NN architecture for Asian Call Option
 │
 ├── plots/                                        # relevant plots and visualization
 │   ├── BS/

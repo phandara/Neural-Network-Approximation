@@ -48,11 +48,11 @@ quantile-hedging-nn/
 ```
 
 ## Checklist
-| Component              | Done? | Notes                                               |
-| ---------------------- | ----- | --------------------------------------------------- |
-| Model generator        | ✅     | Re-implement from scratch                           |
-| LSTM model             | ✅     | Modular, test on synthetic data                     |
-| Loss Function          | ✅     | Careful TensorFlow implementation                   |
-| Training loop          | ✅     | Save models for different mu                        |
-| Evaluation pipeline    | ✅     | Plots, performance stats, CSV export                |
-| Visualizations         | ✅     | Quantile plot, probability plot, histograms         |
+| Component              |   Done?    | Notes                                               |
+| ---------------------- | ---------- | --------------------------------------------------- |
+| Model generator        |     ✅     | Re-implement from scratch                           |
+| LSTM model             |     ✅     | Modular, test on synthetic data                     |
+| Loss Function          |     ✅     | Careful TensorFlow implementation                   |
+| Training loop          |     ✅     | Save models for different mu                        |
+| Evaluation pipeline    |     ✅     | Plots, performance stats, CSV export                |
+| Visualizations         |     ✅     | Quantile plot, probability plot, histograms         |

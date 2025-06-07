@@ -3,6 +3,15 @@ import sys
 import numpy as np
 import tensorflow as tf
 
+"""
+Train and save two-head LSTM models under the Heston model.
+
+This script:
+1. Generates synthetic price path data using our HestonDataGenerator.
+2. Trains a custom QuantileHedgeModel with different penalization factors (mu).
+3. Saves the resulting model weights for each mu value.
+"""
+
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -45,4 +54,4 @@ for mu in mu_values:
     base_model.save_weights(f"models/Heston/lstm_heston_mu_{mu}.weights.h5")
     print(f"Saved weights for mu = {mu}")
 
-print("\n✅ All Heston trainings complete.")
+print("\n All Heston trainings complete.")

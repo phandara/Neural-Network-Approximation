@@ -2,11 +2,18 @@ import os
 import sys
 import numpy as np
 import tensorflow as tf
+"""
+Train and save two-head LSTM models under a trinomial model.
 
+This script:
+1. Generates synthetic price path data using our TrinomialDataGenerator.
+2. Trains a custom QuantileHedgeModel with different penalization factors (mu).
+3. Saves the resulting model weights for each mu value.
+"""
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data.generator_trimonial import TrinomialDataGenerator
+from data.generator_trinomial import TrinomialDataGenerator
 from models.architecture import create_two_head_model, QuantileHedgeModel
 
 # Parameters
@@ -15,9 +22,9 @@ time_steps = 30
 learning_rate = 1e-4
 epochs = 40
 batch_size = 512*2
-#100, 1000, 5000, 10000, 22500, 27500, 30000, 40000,
+
 # List of mu values to train over
-mu_values = [16000]
+mu_values = [100, 1000, 5000, 12500, 15000, 16000]
 
 # Prepare data
 print("Generating trinomial data...")
@@ -48,4 +55,4 @@ for mu in mu_values:
     base_model.save_weights(weight_path)
     print(f"Saved weights to: {weight_path}")
 
-print("\n✅ All trinomial trainings complete.")
+print("\n All trinomial trainings complete.")

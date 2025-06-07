@@ -3,7 +3,12 @@ from sklearn.model_selection import train_test_split
 from typing import Tuple
 import matplotlib.pyplot as plt
 
+"""
+Generate synthetic asset price paths using the trinomial model.
+This class is used to create training and testing data for our model.
+"""
 class TrinomialDataGenerator:
+    # Trinomial model parameters
     def __init__(self, num_samples: int, time_steps: int, init_price: float = 100.0,
                  u: float = 0.01, d: float = -0.01, m: float = 0):
         self.num_samples = num_samples
@@ -13,6 +18,7 @@ class TrinomialDataGenerator:
         self.d = 1+d
         self.m = 1+m
 
+    # Simulate paths using the trinomial model
     def simulate_trinomial_paths(self) -> np.ndarray:
         NumOfSamples = self.num_samples
         TimeSteps = self.time_steps
@@ -29,6 +35,7 @@ class TrinomialDataGenerator:
             S[:, t] = S[:, t - 1] * Z[:, t]
         return S
 
+    # Generate data for training and testing
     def generate_data(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         y = self.simulate_trinomial_paths()
         x = np.zeros_like(y)
@@ -43,6 +50,7 @@ class TrinomialDataGenerator:
         return x_train.astype(np.float32), x_test.astype(np.float32), \
                y_train.astype(np.float32), y_test.astype(np.float32)
 
+# Example usage
 if __name__ == "__main__":
     generator = TrinomialDataGenerator(num_samples=1000, time_steps=30)
     x_train, x_test, y_train, y_test = generator.generate_data()

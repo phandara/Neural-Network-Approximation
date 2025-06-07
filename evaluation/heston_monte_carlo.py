@@ -7,6 +7,24 @@ def heston_monte_carlo(num_paths: int = 1000000, time_steps: int = 60,
                        S0: float = 100.0, K: float = 100.0,
                        v0: float = 0.04, kappa: float = 2.0, theta: float = 0.05,
                        xi: float = 0.4, rho: float = -0.8, T: float = 60/500) -> Tuple[float, float]:
+    """
+    Monte Carlo pricing of an Asian call option under the Heston stochastic volatility model.
+
+    Parameters:
+        num_paths (int): Number of Monte Carlo paths
+        time_steps (int): Number of time steps per path
+        S0 (float): Initial asset price
+        K (float): Strike price of the Asian call
+        v0 (float): Initial variance
+        kappa (float): Mean reversion speed of variance
+        theta (float): Long-run variance level
+        xi (float): Volatility of volatility
+        rho (float): Correlation between asset and variance processes
+        T (float): Time to maturity (in years)
+
+    Returns:
+        Tuple[float, float]: (estimated price, standard error)
+    """
 
     dt = T / time_steps
     S = np.zeros((num_paths, time_steps + 1))
@@ -38,6 +56,7 @@ def heston_monte_carlo(num_paths: int = 1000000, time_steps: int = 60,
     std_error = np.std(payoff) / np.sqrt(num_paths)
     return price_estimate, std_error
 
+# Example usage
 if __name__ == "__main__":
     np.random.seed(1)
     price, stderr = heston_monte_carlo()

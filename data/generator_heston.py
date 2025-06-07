@@ -3,7 +3,12 @@ from sklearn.model_selection import train_test_split
 from typing import Tuple
 import matplotlib.pyplot as plt
 
+"""
+Generate synthetic asset price paths using the Heston model.
+This class is used to create training and testing data for our model.
+"""
 class HestonDataGenerator:
+    # Heston model parameters
     def __init__(self, num_samples: int, time_steps: int, init_price: float = 100.0,
                  v0: float = 0.04, kappa: float = 2.0, theta: float = 0.05, # kappa == mean reversion speed, thetha == Long-term average vol
                  xi: float = 0.4, rho: float = -0.8, dt: float = 1.0 / 500): # xi == vol of vol, rho == correlation price vs vol
@@ -17,6 +22,7 @@ class HestonDataGenerator:
         self.rho = rho
         self.dt = dt
 
+    # Simulate paths using the Heston model
     def simulate_heston_paths(self) -> Tuple[np.ndarray, np.ndarray]:
         S = np.zeros((self.num_samples, self.time_steps))
         V = np.zeros((self.num_samples, self.time_steps))
@@ -41,6 +47,7 @@ class HestonDataGenerator:
 
         return S, V
 
+    # Generate data for training and testing
     def generate_data(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         y, _ = self.simulate_heston_paths()
         x = np.zeros_like(y)
@@ -55,6 +62,7 @@ class HestonDataGenerator:
         return x_train.astype(np.float32), x_test.astype(np.float32), \
                y_train.astype(np.float32), y_test.astype(np.float32)
 
+# Example usage
 if __name__ == "__main__":
     np.random.seed(1)
     generator = HestonDataGenerator(num_samples=100, time_steps=30)

@@ -5,11 +5,22 @@ import tensorflow as tf
 import sys
 import pandas as pd
 from scipy.stats import norm
+
+"""
+Evaluate trained quantile hedging models on Black-Scholes data.
+
+Steps:
+1. Load pre-trained models for multiple penalty weights (mu).
+2. Predict initial capital (V₀) and hedge ratios (Δ).
+3. Compute final portfolio value and compare to payoff.
+4. Assess hedge success probabilities.
+5. Visualize results and compare with Black–Scholes benchmark.
+"""
+
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.architecture import create_two_head_model
-
 
 # Parameters
 mu_values = [10, 100, 500, 1000, 3000, 5000, 7500, 15000]
@@ -36,7 +47,7 @@ for mu in mu_values:
     # Load pre-trained weights
     weight_path = os.path.join(model_dir, f"lstm_quantile_mu_{mu}.weights.h5")
     if not os.path.exists(weight_path):
-        print(f"❌ Weights for mu={mu} not found at {weight_path}, skipping...")
+        print(f" Weights for mu={mu} not found at {weight_path}, skipping...")
         continue
     model.load_weights(weight_path)
 
@@ -100,7 +111,7 @@ df = pd.DataFrame({
 })
 df.to_csv(os.path.join(model_dir, "mu_results.csv"), index=False)
 
-print("\n✅ Evaluation complete. Results saved.")
+print("\n Evaluation complete. Results saved.")
 
 # Print helpful debug stats
 print("For last mu")
@@ -115,13 +126,13 @@ def bs_call_price(S, K, T, sigma, r=0):
     d2 = d1 - sigma * np.sqrt(T)
     return S * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
 
-# Add once
+# Compute BS price
 S0 = 100
 K = 100
 sigma = 0.1
 T = 30 / 250
 bs_price = bs_call_price(S0, K, T, sigma)
-print(f"📌 Black-Scholes price for the call: {bs_price:.4f}")
+print(f"Black-Scholes price for the call: {bs_price:.4f}")
 
 # --- Plot Initial Capital vs Mu with BS Benchmark ---
 plt.figure(figsize=(8, 6))

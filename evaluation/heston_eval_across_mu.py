@@ -7,6 +7,17 @@ import pandas as pd
 
 from scipy.stats import norm
 
+"""
+Evaluate trained quantile hedging models on Heston data.
+
+Steps:
+1. Load pre-trained models for multiple penalty weights (mu).
+2. Predict initial capital (V₀) and hedge ratios (Δ).
+3. Compute final portfolio value and compare to payoff.
+4. Assess hedge success probabilities.
+5. Visualize results and compare with Monte Carlo - benchmark (imported from heston_monte_carlo.py).
+"""
+
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -37,7 +48,7 @@ for mu in mu_values:
 
     weight_path = os.path.join(model_dir, f"lstm_heston_mu_{mu}.weights.h5")
     if not os.path.exists(weight_path):
-        print(f"❌ Weights not found for mu = {mu}, skipping...")
+        print(f" Weights not found for mu = {mu}, skipping...")
         continue
     model.load_weights(weight_path)
 
@@ -75,7 +86,7 @@ for mu in mu_values:
 
 # Monte Carlo theoretical price
 mc_price, mc_error = heston_monte_carlo()
-print(f"\n📌 MC Estimated Asian Option Price: {mc_price:.4f} ± {1.96 * mc_error:.4f}")
+print(f"\n MC Estimated Asian Option Price: {mc_price:.4f} ± {1.96 * mc_error:.4f}")
 
 # Summary plots
 plt.figure(figsize=(8, 6))
@@ -116,4 +127,4 @@ df = pd.DataFrame({
 })
 df.to_csv(os.path.join(model_dir, "heston_mu_results.csv"), index=False)
 
-print("\n✅ Heston evaluation complete.")
+print("\n Heston evaluation complete.")

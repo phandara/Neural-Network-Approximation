@@ -6,6 +6,17 @@ import sys
 import pandas as pd
 from scipy.stats import norm
 
+"""
+Evaluate trained quantile hedging models on trinomial data.
+
+Steps:
+1. Load pre-trained models for multiple penalty weights (mu).
+2. Predict initial capital (V₀) and hedge ratios (Δ).
+3. Compute final portfolio value and compare to payoff.
+4. Assess hedge success probabilities.
+5. Visualize results
+"""
+
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -38,7 +49,7 @@ for mu in mu_values:
     # Load pre-trained weights
     weight_path = os.path.join(model_dir, f"lstm_trinomial_mu_{mu}.weights.h5")
     if not os.path.exists(weight_path):
-        print(f"❌ Weights for mu={mu} not found at {weight_path}, skipping...")
+        print(f" Weights for mu={mu} not found at {weight_path}, skipping...")
         continue
     model.load_weights(weight_path)
 
@@ -146,4 +157,4 @@ plt.tight_layout()
 plt.savefig(os.path.join(plot_dir, "histogram_overlay_trinomial.png"))
 plt.close()
 
-print("\n✅ Trinomial evaluation complete. Results saved.")
+print("\n Trinomial evaluation complete. Results saved.")

@@ -2,6 +2,16 @@ import os
 import tensorflow as tf
 import sys
 import numpy as np
+
+"""
+Train and save two-head LSTM models under the BS model.
+
+This script:
+1. Generates synthetic price path data using our BS DataGenerator.
+2. Trains a custom QuantileHedgeModel with different penalization factors (mu).
+3. Saves the resulting model weights for each mu value.
+"""
+
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -14,7 +24,7 @@ time_steps = 30
 learning_rate = 1e-4
 epochs = 70
 batch_size = 256*2
-#
+
 # List of mu values to train over
 mu_values = [10, 100, 500, 1000, 3000, 5000, 7500, 15000]
 
@@ -39,9 +49,9 @@ for mu in mu_values:
 
     model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
 
-    # Save the base model weights (not wrapper)
+    # Save the model weights
     weight_path = f"models/BS/lstm_quantile_mu_{mu}.weights.h5"
     base_model.save_weights(weight_path)
     print(f"Saved weights to: {weight_path}")
 
-print("\n✅ All trainings complete.")
+print("\n All trainings complete.")

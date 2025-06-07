@@ -3,6 +3,18 @@ from tensorflow.keras.models import Model  # type: ignore
 from tensorflow.keras.layers import (Input, LSTM, Dense, Activation, RepeatVector, TimeDistributed, Lambda)  # type: ignore
 
 def create_two_head_model(input_shape, lstm_units=30):
+    """
+    Build a dual-output LSTM model for quantile hedging.
+
+    Inputs:
+        input_shape (tuple)
+        lstm_units (int): Number of LSTM units in each recurrent layer
+
+    Returns:
+        tf.keras.Model: A model with two outputs:
+            - v0: scalar estimate of initial capital
+            - delta: vector of hedge ratios (Δ) over time
+    """
     inp = Input(shape=input_shape)
 
     # Shared LSTM encoder (compresses full path into one vector)
@@ -27,6 +39,18 @@ def create_two_head_model(input_shape, lstm_units=30):
 
 
 class QuantileHedgeModel(tf.keras.Model):
+    """
+    Custom model wrapper implementing the quantile hedging objective for European call Option.
+
+    The loss is a combination of:
+    - L1: Squared initial capital (encouraging lower capital usage)
+    - L2: Penalty for shortfall probability using a sigmoid-based proxy
+
+    Args:
+        base_model (Model): A Keras model returning (v0, delta)
+        mu (float): Penalty weight on shortfall risk
+        beta (float): Sharpness of sigmoid for quantile loss approximation
+    """
     def __init__(self, base_model, mu, beta):
         super().__init__()
         self.model = base_model

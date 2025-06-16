@@ -3,7 +3,6 @@ import numpy as np
 from typing import Tuple
 import matplotlib.pyplot as plt
 
-
 """
 Generate synthetic asset price paths using the Black–Scholes (BS) model.
 This class is used to create training and testing data for our model.

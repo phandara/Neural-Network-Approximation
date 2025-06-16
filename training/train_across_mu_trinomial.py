@@ -2,6 +2,7 @@ import os
 import sys
 import numpy as np
 import tensorflow as tf
+
 """
 Train and save two-head LSTM models under a trinomial model.
 

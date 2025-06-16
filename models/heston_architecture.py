@@ -37,7 +37,6 @@ def create_two_head_model(input_shape, lstm_units=30):
     model = Model(inputs=inp, outputs=[v0, delta])
     return model
 
-
 class QuantileHedgeModel(tf.keras.Model):
     """
     Custom model wrapper implementing the quantile hedging objective for Asian call Option.

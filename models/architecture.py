@@ -39,7 +39,7 @@ def create_two_head_model(input_shape, lstm_units=30):
 
 class QuantileHedgeModel(tf.keras.Model):
     """
-    Custom model wrapper implementing the quantile hedging objective for European call Option.
+    Custom model wrapper implementing the quantile hedging objective for European/Asian call Option.
 
     The loss is a combination of:
     - L1: Squared initial capital (encouraging lower capital usage)

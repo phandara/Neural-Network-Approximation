@@ -35,8 +35,7 @@ quantile-hedging-nn/
 │   ├── BS/                                       # respective weights
 │   ├── Trinomial/
 │   ├── Heston/
-│   ├── architecture.py                           # NN architecture for European Call Option
-│   └── heston_architecture.py                    # NN architecture for Asian Call Option
+│   └── architecture.py                           # NN architecture
 │
 ├── plots/                                        # relevant plots and visualization
 │   ├── BS/

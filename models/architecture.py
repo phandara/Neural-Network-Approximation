@@ -50,11 +50,12 @@ class QuantileHedgeModel(tf.keras.Model):
         mu (float): Penalty weight on shortfall risk
         beta (float): Sharpness of sigmoid for quantile loss approximation
     """
-    def __init__(self, base_model, mu, beta):
+    def __init__(self, base_model, mu, beta, option="European"):
         super().__init__()
         self.model = base_model
         self.mu = mu
         self.beta = beta
+        self.option = option
 
     def compile(self, optimizer):
         super().compile()
@@ -73,7 +74,14 @@ class QuantileHedgeModel(tf.keras.Model):
             portfolio = v0_pred + gains
 
             K = 100.0
-            H = tf.maximum(y_true[:, -1, 0] - K, 0.0)
+            if self.option == "European":
+                H = tf.maximum(y_true[:, -1, 0] - K, 0.0)
+            elif self.option == "Asian":
+                X_avg = tf.reduce_mean(y_true[:, :, 0], axis=1)  # average over all time steps
+                H = tf.maximum(X_avg - K, 0.0)  # Asian Call payoff
+            else:
+                raise ValueError("Unsupported option type. Use 'European' or 'Asian'.")
+
 
             def sigmoid_indicator(portfolio, H, beta):
                 return tf.square(tf.maximum(tf.sigmoid(beta * (H - portfolio)) - 0.5, 0.0))

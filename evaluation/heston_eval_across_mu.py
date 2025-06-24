@@ -21,7 +21,7 @@ Steps:
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from models.heston_architecture import create_two_head_model
+from models.architecture import create_two_head_model
 from heston_monte_carlo import heston_monte_carlo
 
 # Parameters

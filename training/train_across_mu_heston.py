@@ -15,7 +15,7 @@ This script:
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from models.heston_architecture import create_two_head_model, QuantileHedgeModel
+from models.architecture import create_two_head_model, QuantileHedgeModel
 from data.generator_heston import HestonDataGenerator
 
 # Parameters
@@ -44,7 +44,7 @@ for mu in mu_values:
     print(f"\n=== Training model with mu = {mu} ===")
 
     base_model = create_two_head_model(input_shape=input_shape)
-    model = QuantileHedgeModel(base_model, mu, beta = 0.75)
+    model = QuantileHedgeModel(base_model, mu, beta = 0.75, option="Asian")
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate))
 
     model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)

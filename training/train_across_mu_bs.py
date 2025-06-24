@@ -44,7 +44,7 @@ for mu in mu_values:
     print(f"\n=== Training model with mu = {mu} ===")
 
     base_model = create_two_head_model(input_shape=input_shape)
-    model = QuantileHedgeModel(base_model, mu, beta = 0.75)
+    model = QuantileHedgeModel(base_model, mu, beta = 0.75, option="European")
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate))
 
     model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)

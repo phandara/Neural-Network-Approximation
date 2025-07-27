@@ -18,7 +18,7 @@ Steps:
 5. Visualize results and compare with Monte Carlo - benchmark (imported from heston_monte_carlo.py).
 """
 
-# Add project root to path
+# Add project root to path 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.architecture import create_two_head_model

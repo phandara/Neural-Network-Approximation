@@ -88,7 +88,7 @@ for mu in mu_values:
 # ---------- Plots ----------
 plt.figure(figsize=(8, 6))
 plt.plot(mu_values[:len(V0_list)], V0_list, marker='o', label="NN Approximation")
-plt.axhline(y=2.17, color='red', linestyle='--', label="MC Benchmark (2.17)")
+plt.axhline(y=2.17, color='red', linestyle='--', label="Benchmark (2.17)")
 plt.xlabel("Mu (penalty weight)")
 plt.ylabel("Initial Capital $V_0$")
 plt.title("Initial Capital vs. Mu (Trinomial)")
